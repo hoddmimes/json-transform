@@ -95,6 +95,8 @@ The file generate.sh do this for you i.e. generate the test files.
 </Messages>
 </small>
 
+**the generated POJO/JSON object based upon the defintion above can be viewed here: [TestMessage.java]([https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/generated/TestMessage.java])**
+
 
 ### Supported Attribute Types
 
