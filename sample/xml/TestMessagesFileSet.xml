@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MessageFiles>
+	<!-- Generate a sigle message factory for all messages defined in the "MessageFile" files found -->
+	<!-- If you do not like to generate a MessageFactory just comment out next line -->
+	<MessageFactory outPath="./java/main/generated/" package="generated"/>
+
+	<!-- Generates JSON schemas for the structures found in the "MessageFile" files found -->
+	<!-- If you do not like to generate JSON schemas to be generated, comment out next line -->
+	<SchemaFactory outPath="./jsonSchemas/" schemaDir="./sample/jsonSchemas/"/>
+
+	<!-- Generates Mongo auxilliry CRUD and find methods for the structures defined in the "MessageFile" files found -->
+	<!-- If you do not like to Mongo auxilliry support to be generated, comment out next line -->
+	<MongoAux outPath="./java/main/generated/" package="generated"/>
+
+	<!-- Gnerates POJO objects with JSON support based upon the defintion found in the file -->
+	<!-- You may have multiple "MessageFile" entries -->
+	<MessageFile  file="./xml/TestMessage.xml" outPath="./java/main/generated/" package="generated"/>
+</MessageFiles>
+

@@ -1,0 +1,21 @@
+
+ {
+   "$schema": "http://json-schema.org/draft-06/schema#",
+   "title": "TestSubMessage",
+   "type": "object",
+     "properties" : { 
+          "intValue" : { "minimum": 42, "maximum": 84, "type" : "integer" },
+          "strValue" : { "pattern": "foo[X-Z]+bar", "type" : "string" },
+          "stringArray" : {
+            "items" : { "type" : "string" },
+            "type" : "array"
+          },
+          "intArray" : {
+            "items" : { "type" : "integer" },
+            "type" : "array"
+          }
+     },
+     "required": ["intValue"]
+    
+}
+                

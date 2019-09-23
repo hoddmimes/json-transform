@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Messages mongoSupport="true">
+
+	<ConstantGroups prefix="Core">
+		<Group name="CG1">
+			<Constant id="X1"/>
+			<Constant id="X2"/>
+			<Constant id="X3"/>
+			<Constant id="X4"/>
+			<Constant id="X5"/>
+		</Group>
+		<Group name="CG2">
+			<Constant id="Y1" value="500"/>
+			<Constant id="Y2" value="501"/>
+			<Constant id="Y3" value="502"/>
+		</Group>
+	</ConstantGroups>
+
+	<Message name="TestSubMessage">
+		<Attribute name="intValue" type="int" mandatory="true" min="42" max="84"/>
+		<Attribute name="strValue" type="String"  pattern="foo[X-Z]+bar"/>
+		<Attribute name="stringArray" type="String" array="[]"/>
+		<Attribute name="intArray" type="int" array="[]"/>
+	</Message>
+
+	<Message name="TestMessage" rootMessage="true" db="true" dbCollection="Test">
+		<Attribute name="stringArray" type="String" array="[]"/>
+		<Attribute name="constValue" constantGroup="CG1"/>
+		<Attribute name="constArray" constantGroup="CG2" array="[]"/>
+		<Attribute name="boolValue" type="boolean"/>
+		<Attribute name="charValue" type="char"/>
+		<Attribute name="byteValue" type="byte"/>
+		<Attribute name="doubleValue" type="double"/>
+		<Attribute name="shortValue" type="short" mandatory="true" min="0" max="100" multiplieOf="3" />
+		<Attribute name="intValue" type="int" mandatory="true" dbKey="unique"/>
+		<Attribute name="intArray" type="int" array="[]"/>
+		<Attribute name="longValue" type="long" />
+		<Attribute name="strValue" type="String" minLength="3" maxLength="12" mandatory="true"  pattern="foo-\\w*-\\d*" dbKey="unique"/>
+		<Attribute name="bytesValue" type="byte[]" dbTransient="true" />
+		<Attribute name="bytesArrayValue" type="byte[]" array="[]"/>
+		<Attribute name="msgValue" type="TestSubMessage"/>
+		<Attribute name="msgArray" type="TestSubMessage" array="[]"/>
+		<Attribute name="timeString" type="String" mandatory="true"  pattern="\\d+-\\d+-\\d+ \\d+:\\d+:\\d+\\.\\d+"/>
+	</Message>
+</Messages>

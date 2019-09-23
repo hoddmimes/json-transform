@@ -1,2 +1,150 @@
 # json-transform
-Generate POJOs from XML defintions having JSON (objects and schemas) and Mongo support 
+
+
+This is a convenience tool for generating Java POJO Object, JSON Schemas, POJO Mongo Support and Message factory for the POJO objects generated,  based on XML definitions.
+
+The generated Java POJO objects have the ability to encode itself to JSON objects, the objects could also instansiate themself with JSON objects or JSON strings;
+
+From the XML definitions the POJOs and corrsponding JSON (basic) schemas are generated. Furthermore there is support for the generated POJO messages to encode / decode them self to Mongo documents.
+For more information about the Mongo support see section *Mongo Support* below.
+
+## Transformation / Generation
+There is a Java program **JsonTransform.java** that takes one argument "-xml *transformation-definions*.xml".  The program will read the defintion file and based on the defintions generate JAVA POJO classes, JSON Schemas and a MessageFactory. The later can take a JSON string and create corsponding POJO .
+
+## XML Defintions
+Sampels are found in the directory ./sample/xml/
+The defintion file *(sample TestMessagesFileSet.xml)* defines what XML definition files that are going to be processed and where to generate the output.
+It is possible to define refere to structure defintions files to be included in the to defintion file.
+
+## To Test
+To test you can run a transformation of the sample defintions by executiong the command
+$ java -cp json-transform.1.0.jar JsonTransform -xml ./xml/TestMessagesFileSet.xml
+
+The file generate.sh do this for you i.e. generate the test files.
+
+## Sample TestMessageFileSet.xml
+
+ <small>
+    <?xml version="1.0" encoding="UTF-8"?>
+    <MessageFiles>
+       <!-- Generate a sigle message factory for all messages defined in the "MessageFile" files found -->
+       <!-- If you do not like to generate a MessageFactory just comment out next line -->
+       <MessageFactory outPath="./java/main/generated/" package="generated"/>
+
+       <!-- Generates JSON schemas for the structures found in the "MessageFile" files found -->
+       <!-- If you do not like to generate JSON schemas to be generated, comment out next line -->
+       <SchemaFactory outPath="./jsonSchemas/" schemaDir="./sample/jsonSchemas/"/>
+
+       <!-- Generates Mongo auxilliry CRUD and find methods for the structures defined in the "MessageFile" files found -->
+       <!-- If you do not like to Mongo auxilliry support to be generated, comment out next line -->
+       <MongoAux outPath="./java/main/generated/" package="generated"/>
+
+       <!-- Gnerates POJO objects with JSON support based upon the defintion found in the file -->
+       <!-- You may have multiple "MessageFile" entries -->
+       <MessageFile  file="./xml/TestMessage.xml" outPath="./java/main/generated/" package="generated"/>
+    </MessageFiles>
+
+</small>
+
+## Sample TestMessage.xml
+<small>
+<?xml version="1.0" encoding="UTF-8"?>
+<Messages mongoSupport="true">
+
+	<ConstantGroups prefix="Core">
+		<Group name="CG1">
+			<Constant id="X1"/>
+			<Constant id="X2"/>
+			<Constant id="X3"/>
+			<Constant id="X4"/>
+			<Constant id="X5"/>
+		</Group>
+		<Group name="CG2">
+			<Constant id="Y1" value="500"/>
+			<Constant id="Y2" value="501"/>
+			<Constant id="Y3" value="502"/>
+		</Group>
+	</ConstantGroups>
+
+	<Message name="TestSubMessage">
+		<Attribute name="intValue" type="int" mandatory="true" min="42" max="84"/>
+		<Attribute name="strValue" type="String"  pattern="foo[X-Z]+bar"/>
+		<Attribute name="stringArray" type="String" array="[]"/>
+		<Attribute name="intArray" type="int" array="[]"/>
+	</Message>
+
+	<Message name="TestMessage" rootMessage="true" db="true" dbCollection="Test">
+		<Attribute name="stringArray" type="String" array="[]"/>
+		<Attribute name="constValue" constantGroup="CG1"/>
+		<Attribute name="constArray" constantGroup="CG2" array="[]"/>
+		<Attribute name="boolValue" type="boolean"/>
+		<Attribute name="charValue" type="char"/>
+		<Attribute name="byteValue" type="byte"/>
+		<Attribute name="doubleValue" type="double"/>
+		<Attribute name="shortValue" type="short" mandatory="true" min="0" max="100" multiplieOf="3" />
+		<Attribute name="intValue" type="int" mandatory="true" dbKey="unique"/>
+		<Attribute name="intArray" type="int" array="[]"/>
+		<Attribute name="longValue" type="long" />
+		<Attribute name="strValue" type="String" minLength="3" maxLength="12" mandatory="true"  pattern="foo-\\w*-\\d*" dbKey="unique"/>
+		<Attribute name="bytesValue" type="byte[]" dbTransient="true" />
+		<Attribute name="bytesArrayValue" type="byte[]" array="[]"/>
+		<Attribute name="msgValue" type="TestSubMessage"/>
+		<Attribute name="msgArray" type="TestSubMessage" array="[]"/>
+		<Attribute name="timeString" type="String" mandatory="true"  pattern="\\d+-\\d+-\\d+ \\d+:\\d+:\\d+\\.\\d+"/>
+	  </Message>
+	</Messages>
+</small>
+
+
+### Supported Attribute Types
+
+
+ - "boolean" mapped to JSON "Boolean"
+ - "byte" mapped to JSON "Integer"
+ - "char" mapped to JSON "Integer"
+ - "short" mapped to JSON "Integer"
+ - "int" mapped to JSON "Integer"
+ - "long" mapped to JSON "Integer"
+ - "double" mapped to JSON "Numeric"
+ - "String" mapped to JSON "String"
+ - "byte[]" mapped to JSON "String" (Base64 string)
+
+ ### Suported JSON Schema Attributes
+ For
+
+ - "mandatory" requires that the attribute is present / set
+ - for strings, "maxLength", "minLength", "pattern"
+ - for integer "min", "max", "multipleOf"
+
+
+
+
+## Mongo Support
+Optionally message objects can also be generated to support Mongo encode/decoding by implemention the interface
+[MessageMongoInterface.java](https://github.com/hoddmimes/JmsgToJson/blob/master/src/main/java/com.hoddmimes.jmsgjson.MessageMongoInterface.java)
+
+Three optional directives rules which and how message objects  implements Mongo support.
+ * On a top level <Messages *mongoSupport="true"*> the attribute *mongoSupport* rules whatever the message definitions in the XML files
+ should be subject for implemention Mongo support or not.
+ * On a individual message level <Message name="Froboz" rootMessage="true" *db="true" dbCollection="Test"*> the attribute *db* defines whatever the message is
+ subject for implemention Mongo support or not. The attribute *dbCollection* is optional and is used to define an alternative name to be used for the Mongo collection into which the message
+ is stored. If not present the collection name used used be the message name.
+ * On a message attribute level the xml attribute <Attribute name="intValue" type="int" mandatory="true" *dbKey="unique"*/> *dbKey* defines whatever the attribute
+ should be a Mongo key in the document or not. If the *dbKey* value is *"unique"* the Mongo key would need to be unique. Furhermore an XML attribyte could also be tagged with *dbTransient" <Attribute name="bytesValue" type="byte[]" *dbTransient="true"*/>.
+ This will result in that the attribute will not be written/retrived to/from Mongo.
+
+In addition a class MongoAux.java is generated. This class implements convinence methods for creating a database, dropping a database and CRUD methods for handling the message POJO interaction with Mongo.
+The files XML topfile, in the example  [TestMessageFileSet.xml](https://github.com/hoddmimes/JmsgToJson/blob/master/xml/TestMessageFileSet.xml) defines whatever the class MongoAux.java should be generated or not.
+
+
+## Sample TestSchema.java
+The file [TestSchema.java](https://github.com/hoddmimes/JmsgToJson/blob/master/src/test/java/TestSchema.java) exemplify
+how to verify a Json message against one of the schemas generated.
+
+## Sample TestEncodeDecode.java
+the file [TestEncodeDecode.java](https://github.com/hoddmimes/JmsgToJson/blob/master/src/test/java/TestEncodeDecode.java)
+exemplfies how encode/encode a Java POJO class.
+
+## Sample TestMongoSupport.java
+the file [TestEncodeDecode.java](https://github.com/hoddmimes/JmsgToJson/blob/master/src/test/java/TestMongoSupport.java)
+exemplfies how encode/encode a Java POJO class.

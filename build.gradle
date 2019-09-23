@@ -1,0 +1,110 @@
+
+allprojects {
+	    group = "com.hoddmimes.jsontransform"
+	    version = 1.0
+}
+
+subprojects {
+    apply plugin: 'java'
+
+    sourceCompatibility = 1.8
+
+    sourceSets {
+       main {
+          java {
+            srcDir 'java/main'
+          }
+       }
+       test {
+         java {
+            srcDir 'java/test'
+        }
+      }
+   }
+
+   repositories {
+      mavenCentral()
+   }
+
+   dependencies {
+    compile group: 'com.github.erosb', name: 'everit-json-schema-jdk6', version: '1.9.2'
+    compile group: 'com.google.code.gson', name: 'gson', version: '2.8.2'
+    compile group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.2'
+    compile group: 'junit', name: 'junit', version: '4.12'
+    compile group: 'xalan', name: 'xalan', version: '2.7.2'
+   }
+}
+
+
+project(':jtransform') {
+
+    jar {
+        baseName = 'jtransform';
+        version = '1.0'
+
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+        from('out/production/classes') {
+            include '**/*.class'
+        }
+
+        from('xsl') {
+            include '*.xsl'
+        }
+        destinationDir = file("../")
+
+    }
+
+    dependencies {
+    }
+}
+
+
+
+
+project(':sample') {
+    
+    task(generateTestClasses, type: JavaExec) {
+        main = 'JsonTransform'
+        classpath = files('../jtransform-1.0.jar')
+        args "-xml","./xml/TestMessagesFileSet.xml"
+    }
+
+    compileJava.dependsOn('generateTestClasses')
+
+    jar {
+        baseName = 'samples';
+        version = '1.0'
+
+        from {
+            configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
+        }
+        
+        from('out/production/classes') {
+            include '**/*.class'
+        }
+
+        from('out/test/classes') {
+            include '**/*.class'
+        }
+        
+        destinationDir = file("../")
+    }
+    
+    
+    dependencies {
+        
+        compile project(':jtransform')
+    }
+}
+
+
+
+
+
+
+
+
+
+
