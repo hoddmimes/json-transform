@@ -91,8 +91,8 @@ The file generate.sh do this for you i.e. generate the test files.
 		<Attribute name="msgValue" type="TestSubMessage"/>
 		<Attribute name="msgArray" type="TestSubMessage" array="[]"/>
 		<Attribute name="timeString" type="String" mandatory="true"  pattern="\\d+-\\d+-\\d+ \\d+:\\d+:\\d+\\.\\d+"/>
-	  </Message>
-	</Messages>
+	</Message>
+</Messages>
 </small>
 
 
@@ -120,31 +120,34 @@ The file generate.sh do this for you i.e. generate the test files.
 
 
 ## Mongo Support
-Optionally message objects can also be generated to support Mongo encode/decoding by implemention the interface
-[MessageMongoInterface.java](https://github.com/hoddmimes/JmsgToJson/blob/master/src/main/java/com.hoddmimes.jmsgjson.MessageMongoInterface.java)
+Optionally message objects can also be generated to support Mongo encode/decoding by implementing the interface
+[MessageMongoInterface.java]([https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/com/hoddmimes/jsontransform/MessageMongoInterface.java](https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/com/hoddmimes/jsontransform/MessageMongoInterface.java))
 
 Three optional directives rules which and how message objects  implements Mongo support.
  * On a top level <Messages *mongoSupport="true"*> the attribute *mongoSupport* rules whatever the message definitions in the XML files
- should be subject for implemention Mongo support or not.
+ should be subject for generate Mongo support or not.
  * On a individual message level <Message name="Froboz" rootMessage="true" *db="true" dbCollection="Test"*> the attribute *db* defines whatever the message is
- subject for implemention Mongo support or not. The attribute *dbCollection* is optional and is used to define an alternative name to be used for the Mongo collection into which the message
- is stored. If not present the collection name used used be the message name.
+ subject for implementing Mongo support or not. The attribute *dbCollection* is optional and is used to define an alternative name to be used for the Mongo collection into which the message
+ is stored. If not present the collection name used will be equal with the message name.
  * On a message attribute level the xml attribute <Attribute name="intValue" type="int" mandatory="true" *dbKey="unique"*/> *dbKey* defines whatever the attribute
- should be a Mongo key in the document or not. If the *dbKey* value is *"unique"* the Mongo key would need to be unique. Furhermore an XML attribyte could also be tagged with *dbTransient" <Attribute name="bytesValue" type="byte[]" *dbTransient="true"*/>.
- This will result in that the attribute will not be written/retrived to/from Mongo.
+ should be a Mongo key in the document or not. If the *dbKey* value is *"unique"* the Mongo key would need to be unique. Furhermore an XML attribute could also be tagged with *dbTransient" <Attribute name="bytesValue" type="byte[]" *dbTransient="true"*/>.
+ This will result in that the attribute will not be written/retrieved to/from Mongo.
 
-In addition a class MongoAux.java is generated. This class implements convinence methods for creating a database, dropping a database and CRUD methods for handling the message POJO interaction with Mongo.
-The files XML topfile, in the example  [TestMessageFileSet.xml](https://github.com/hoddmimes/JmsgToJson/blob/master/xml/TestMessageFileSet.xml) defines whatever the class MongoAux.java should be generated or not.
+In addition a class MongoAux.java is generated. This class implements convince methods for creating a database, dropping a database and CRUD methods for handling the message POJO interaction with Mongo.
+The files XML topfile, in the example  [TestMessageFileSet.xml]([https://github.com/hoddmimes/json-transform/blob/master/sample/xml/TestMessagesFileSet.xml](https://github.com/hoddmimes/json-transform/blob/master/sample/xml/TestMessagesFileSet.xml)) defines whatever the class MongoAux.java should be generated or not.
 
 
 ## Sample TestSchema.java
-The file [TestSchema.java](https://github.com/hoddmimes/JmsgToJson/blob/master/src/test/java/TestSchema.java) exemplify
+The file [TestSchema.java]([https://github.com/hoddmimes/json-transform/blob/master/sample/java/test/test/TestSchema.java](https://github.com/hoddmimes/json-transform/blob/master/sample/java/test/test/TestSchema.java)) exemplify
 how to verify a Json message against one of the schemas generated.
 
 ## Sample TestEncodeDecode.java
-the file [TestEncodeDecode.java](https://github.com/hoddmimes/JmsgToJson/blob/master/src/test/java/TestEncodeDecode.java)
+the file [TestEncodeDecode.java]([https://github.com/hoddmimes/json-transform/blob/master/sample/java/test/test/TestEncodeDecode.java](https://github.com/hoddmimes/json-transform/blob/master/sample/java/test/test/TestEncodeDecode.java))
 exemplfies how encode/encode a Java POJO class.
 
 ## Sample TestMongoSupport.java
-the file [TestEncodeDecode.java](https://github.com/hoddmimes/JmsgToJson/blob/master/src/test/java/TestMongoSupport.java)
-exemplfies how encode/encode a Java POJO class.
+the file [TestEncodeDecode.java]([https://github.com/hoddmimes/json-transform/blob/master/sample/java/test/test/TestMongoSupport.java](https://github.com/hoddmimes/json-transform/blob/master/sample/java/test/test/TestMongoSupport.java))
+exemplfies how encode/encode a Java POJO class to Mongo DB documents. It also exemplifies how to use the generated Mongo auxiliary methods in the class [MongoAux]([[https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/generated/MongoAux.java](https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/generated/MongoAux.java)) to create,delete,find and update POJO objects in a Mongo DB.
+
+The test assumes that there is a local Mongo DB instance without any authentication enabled.
+ 
