@@ -150,4 +150,11 @@ the file [TestEncodeDecode.java]([https://github.com/hoddmimes/json-transform/bl
 exemplfies how encode/encode a Java POJO class to Mongo DB documents. It also exemplifies how to use the generated Mongo auxiliary methods in the class [MongoAux]([[https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/generated/MongoAux.java](https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/generated/MongoAux.java)) to create,delete,find and update POJO objects in a Mongo DB.
 
 The test assumes that there is a local Mongo DB instance without any authentication enabled.
- 
+
+
+## JAR Files Built
+Three JAR files are built and placed on the project top level
+
+- pojojson-generate-1.0.jar  this JAR contains everyhing needed for generating POJO/JSON objects from a XML defintion, A generation of objects are typically done by invoking the following command "java -cp pojojson-generate-1.0.jar JsonTransform -xml *transformation-definions*.xml"
+- pojojson-1.0.jar contains the support classes for encode/decode generated POJO/JSON objects. This JAR is need when there is a need for encode/decode generated objects.
+- pojojson-tests.jar contains all classes for running the test on the generated TestMessage object in this project.

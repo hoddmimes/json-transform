@@ -38,9 +38,10 @@ subprojects {
 
 project(':jtransform') {
 
-    jar {
-        baseName = 'jtransform';
+    task buildGenerateJar (type: Jar) {
+        baseName = 'pojojson-generate';
         version = '1.0'
+        destinationDir = file("../")
 
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
@@ -52,10 +53,15 @@ project(':jtransform') {
         from('xsl') {
             include '*.xsl'
         }
-        destinationDir = file("../")
 
+        doLast {
+            println('Generate JAR successfully built!')
+        }
     }
-
+    
+    
+    build.finalizedBy(buildGenerateJar)
+    
     dependencies {
     }
 }
@@ -67,20 +73,28 @@ project(':sample') {
     
     task(generateTestClasses, type: JavaExec) {
         main = 'JsonTransform'
-        classpath = files('../jtransform-1.0.jar')
+        classpath = files('../pojojson-generate-1.0.jar')
         args "-xml","./xml/TestMessagesFileSet.xml"
     }
 
-    compileJava.dependsOn('generateTestClasses')
+    
+    task buildJars() {
+        dependsOn 'buildPOJOJSONJar'
+        dependsOn 'buildTestJar'
+        
+        doLast {
+            println('Successfully build the pojojson and pojojson-test JARS !') 
+        }
+    }
 
-    jar {
-        baseName = 'samples';
+    task buildTestJar (type: Jar) {
+        baseName = 'pojojson-tests';
         version = '1.0'
+        destinationDir = file("../")
 
         from {
             configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
         }
-        
         from('out/production/classes') {
             include '**/*.class'
         }
@@ -88,13 +102,25 @@ project(':sample') {
         from('out/test/classes') {
             include '**/*.class'
         }
-        
-        destinationDir = file("../")
     }
     
+    task buildPOJOJSONJar (type: Jar) {
+        baseName = 'pojojson';
+        version = '1.0'
+        destinationDir = file("../")
+        
+        from('out/production/classes') {
+            include '**/jsontransform/*.class'
+        }
+    }
+
+    
+    
+
+    compileJava.dependsOn('generateTestClasses')
+    build.finalizedBy(buildJars) 
     
     dependencies {
-        
         compile project(':jtransform')
     }
 }

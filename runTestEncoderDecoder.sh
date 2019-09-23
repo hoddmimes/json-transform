@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp samples-1.0.jar test.TestEncodeDecode
+java -cp pojojson-tests-1.0.jar test.TestEncodeDecode
