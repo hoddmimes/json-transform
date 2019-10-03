@@ -29,8 +29,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Transform
 {
@@ -50,6 +48,7 @@ public class Transform
     private List<MessageSourceFile> mMessageFiles = new ArrayList<>();
     private List<MessageSourceFile> mMessageFactoryFiles = new ArrayList<>();
     private List<MessageSourceFile> mMongoAuxFiles = new ArrayList<>();
+
 
 
     public static void main( String[] pArgs ) {
@@ -98,6 +97,11 @@ public class Transform
 
     private void schemaFactoryTransform() throws Exception
     {
+        if (this.mSchemaDir == null) {
+            System.out.println("SchemaFactory not defined and will not be generated");
+            return;
+        }
+
         File tPath = new File( mXmlDefinitionSourceFile );
         String tSystemId = tPath.toURI().toURL().toExternalForm();
         String tXmlSourcePath = tPath.getCanonicalFile().getParent().replace('\\','/');
@@ -265,19 +269,21 @@ public class Transform
         /**
          * Parse MongoAux entry
          */
-        tNodeList = tRoot.getElementsByTagName("MongoAux");
-        if (tNodeList != null) {
-            for( i = 0; i < tNodeList.getLength(); i++) {
-                if (tNodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                    Element tFileElement = (Element) tNodeList.item(i);
-                    String tPackage = tFileElement.getAttribute("package");
-                    String tOutPath =  tFileElement.getAttribute("outPath");
+        if ((tRoot.getElementsByTagName("MongoAux") != null) && (tRoot.getElementsByTagName("MongoAux").getLength() > 0)) {
+            tNodeList = tRoot.getElementsByTagName("MongoAux");
+            if (tNodeList != null) {
+                for (i = 0; i < tNodeList.getLength(); i++) {
+                    if (tNodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                        Element tFileElement = (Element) tNodeList.item(i);
+                        String tPackage = tFileElement.getAttribute("package");
+                        String tOutPath = tFileElement.getAttribute("outPath");
 
-                    boolean tDebugFlag = false;
-                    if ((tFileElement.getAttribute("debug") != null) && (tFileElement.getAttribute("debug").length() > 0)) {
-                        tDebugFlag = Boolean.parseBoolean(tFileElement.getAttribute("debug"));
+                        boolean tDebugFlag = false;
+                        if ((tFileElement.getAttribute("debug") != null) && (tFileElement.getAttribute("debug").length() > 0)) {
+                            tDebugFlag = Boolean.parseBoolean(tFileElement.getAttribute("debug"));
+                        }
+                        mMongoAuxFiles.add(new MessageSourceFile(mXmlDefinitionSourceFile, tOutPath, tPackage, tDebugFlag));
                     }
-                    mMongoAuxFiles.add( new MessageSourceFile( mXmlDefinitionSourceFile, tOutPath, tPackage, tDebugFlag ));
                 }
             }
         }
@@ -285,19 +291,21 @@ public class Transform
         /**
          * Parse message factory entries
          */
-        tNodeList = tRoot.getElementsByTagName("MessageFactory");
-        if (tNodeList != null) {
-            for( i = 0; i < tNodeList.getLength(); i++) {
-                if (tNodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
-                    Element tFileElement = (Element) tNodeList.item(i);
-                    String tPackage = tFileElement.getAttribute("package");
-                    String tOutPath =  tFileElement.getAttribute("outPath");
+        if ((tRoot.getElementsByTagName("MessageFactory") != null) && (tRoot.getElementsByTagName("MessageFactory").getLength() > 0)) {
+            tNodeList = tRoot.getElementsByTagName("MessageFactory");
+            if (tNodeList != null) {
+                for (i = 0; i < tNodeList.getLength(); i++) {
+                    if (tNodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
+                        Element tFileElement = (Element) tNodeList.item(i);
+                        String tPackage = tFileElement.getAttribute("package");
+                        String tOutPath = tFileElement.getAttribute("outPath");
 
-                    boolean tDebugFlag = false;
-                    if ((tFileElement.getAttribute("debug") != null) && (tFileElement.getAttribute("debug").length() > 0)) {
-                        tDebugFlag = Boolean.parseBoolean(tFileElement.getAttribute("debug"));
+                        boolean tDebugFlag = false;
+                        if ((tFileElement.getAttribute("debug") != null) && (tFileElement.getAttribute("debug").length() > 0)) {
+                            tDebugFlag = Boolean.parseBoolean(tFileElement.getAttribute("debug"));
+                        }
+                        mMessageFactoryFiles.add(new MessageSourceFile(mXmlDefinitionSourceFile, tOutPath, tPackage, tDebugFlag));
                     }
-                    mMessageFactoryFiles.add( new MessageSourceFile( mXmlDefinitionSourceFile, tOutPath, tPackage, tDebugFlag ));
                 }
             }
         }

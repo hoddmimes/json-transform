@@ -134,6 +134,16 @@
                 </xsl:for-each>
             </xsl:for-each>
 
+            class DbKey {
+                String      mKeyName;
+                boolean     mUnique;
+
+                DbKey( String pKeyName, boolean pUnique ) {
+                    mKeyName = pKeyName;
+                    mUnique = pUnique;
+                }
+            }
+
             }
         </redirect:write>
     </xsl:template>
@@ -353,15 +363,7 @@
             }
         </xsl:for-each>
 
-            class DbKey {
-                String      mKeyName;
-                boolean     mUnique;
 
-                DbKey( String pKeyName, boolean pUnique ) {
-                    mKeyName = pKeyName;
-                    mUnique = pUnique;
-                }
-            }
 
     </xsl:template>
 
