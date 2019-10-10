@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings({"WeakerAccess","unused","unchecked"})
 public class MessageFactory implements MessageFactoryInterface
 {
-	private static Pattern JSON_MESSAGE_NAME_PATTERN = Pattern.compile("^\\s*\\{\\s*\"(\\w*)\"\\s*:\\s*\\{");
+	public static Pattern JSON_MESSAGE_NAME_PATTERN = Pattern.compile("^\\s*\\{\\s*\"(\\w*)\"\\s*:\\s*\\{");
 
 
 	private String getJsonMessageId( String pJString )

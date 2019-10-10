@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.hoddmimes.jsontransform.json-transform.iml" filepath="$PROJECT_DIR$/.idea/modules/com.hoddmimes.jsontransform.json-transform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jtransform/com.hoddmimes.jsontransform.jtransform.iml" filepath="$PROJECT_DIR$/.idea/modules/jtransform/com.hoddmimes.jsontransform.jtransform.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jtransform/com.hoddmimes.jsontransform.jtransform.main.iml" filepath="$PROJECT_DIR$/.idea/modules/jtransform/com.hoddmimes.jsontransform.jtransform.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/jtransform/com.hoddmimes.jsontransform.jtransform.test.iml" filepath="$PROJECT_DIR$/.idea/modules/jtransform/com.hoddmimes.jsontransform.jtransform.test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/com.hoddmimes.jsontransform.sample.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/com.hoddmimes.jsontransform.sample.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/com.hoddmimes.jsontransform.sample.main.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/com.hoddmimes.jsontransform.sample.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/sample/com.hoddmimes.jsontransform.sample.test.iml" filepath="$PROJECT_DIR$/.idea/modules/sample/com.hoddmimes.jsontransform.sample.test.iml" />
+    </modules>
+  </component>
+</project>

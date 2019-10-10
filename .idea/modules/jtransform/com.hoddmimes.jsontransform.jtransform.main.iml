@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module external.linked.project.id=":jtransform:main" external.linked.project.path="$MODULE_DIR$/../../../jtransform" external.root.project.path="$MODULE_DIR$/../../.." external.system.id="GRADLE" external.system.module.group="com.hoddmimes.jsontransform" external.system.module.type="sourceSet" external.system.module.version="" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://$MODULE_DIR$/../../../jtransform/out/production/classes" />
+    <exclude-output />
+    <content url="file://$MODULE_DIR$/../../../jtransform/java/main">
+      <sourceFolder url="file://$MODULE_DIR$/../../../jtransform/java/main" isTestSource="false" />
+    </content>
+    <content url="file://$MODULE_DIR$/../../../jtransform/src/main" />
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Gradle: com.github.erosb:everit-json-schema-jdk6:1.9.2" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.code.gson:gson:2.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.mongodb:mongo-java-driver:3.8.2" level="project" />
+    <orderEntry type="library" name="Gradle: junit:junit:4.12" level="project" />
+    <orderEntry type="library" name="Gradle: xalan:xalan:2.7.2" level="project" />
+    <orderEntry type="library" name="Gradle: org.json:json:20180130" level="project" />
+    <orderEntry type="library" name="Gradle: commons-validator:commons-validator:1.6" level="project" />
+    <orderEntry type="library" name="Gradle: commons-beanutils:commons-beanutils:1.9.3" level="project" />
+    <orderEntry type="library" name="Gradle: com.damnhandy:handy-uri-templates:2.1.6" level="project" />
+    <orderEntry type="library" name="Gradle: com.google.re2j:re2j:1.1" level="project" />
+    <orderEntry type="library" name="Gradle: net.sourceforge.streamsupport:streamsupport:1.6.3" level="project" />
+    <orderEntry type="library" name="Gradle: org.threeten:threetenbp:1.3.8" level="project" />
+    <orderEntry type="library" name="Gradle: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" name="Gradle: xalan:serializer:2.7.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-digester:commons-digester:1.8.1" level="project" />
+    <orderEntry type="library" name="Gradle: commons-logging:commons-logging:1.2" level="project" />
+    <orderEntry type="library" name="Gradle: commons-collections:commons-collections:3.2.2" level="project" />
+    <orderEntry type="library" name="Gradle: joda-time:joda-time:2.9.4" level="project" />
+    <orderEntry type="library" name="Gradle: xml-apis:xml-apis:1.3.04" level="project" />
+  </component>
+</module>
