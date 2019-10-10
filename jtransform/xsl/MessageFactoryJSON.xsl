@@ -34,7 +34,7 @@ public class MessageFactory implements MessageFactoryInterface
 	public static Pattern JSON_MESSAGE_NAME_PATTERN = Pattern.compile("^\\s*\\{\\s*\"(\\w*)\"\\s*:\\s*\\{");
 
 
-	private String getJsonMessageId( String pJString ) throws NameNotFoundException
+	public String getJsonMessageId( String pJString ) throws NameNotFoundException
 	{
 		Matcher tMatcher = JSON_MESSAGE_NAME_PATTERN.matcher(pJString);
 		if (tMatcher.find()) {
