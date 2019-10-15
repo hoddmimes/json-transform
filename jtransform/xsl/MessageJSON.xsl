@@ -135,6 +135,7 @@ import java.io.IOException;
     import org.bson.Document;
     import org.bson.conversions.Bson;
     import com.mongodb.BasicDBObject;
+    import org.bson.types.ObjectId;
     import com.hoddmimes.jsontransform.MessageMongoInterface;
     import com.hoddmimes.jsontransform.MongoDecoder;
     import com.hoddmimes.jsontransform.MongoEncoder;
@@ -173,7 +174,13 @@ import com.google.gson.GsonBuilder;
             Document tDoc = null;
             List&lt;Document&gt; tDocLst = null;
 
+
             MongoDecoder tDecoder = new MongoDecoder( pDoc );
+
+            <xsl:if test="@db='true'">
+            ObjectId _tId = pDoc.get("_id", ObjectId.class);
+            this.mMongoId = _tId.toString();
+            </xsl:if>
         <xsl:for-each select="Attribute[not(@dbTransient='true')]">
 
             <xsl:if test="@constantGroup">
@@ -333,6 +340,8 @@ import com.google.gson.GsonBuilder;
     <!--     ============================================== -->
 
     <xsl:template mode="declareAttributes" match="Message">
+        <xsl:if test="./@db='true'">
+                private String mMongoId = null;</xsl:if>
         <xsl:for-each select="Attribute">
             <xsl:if test="@constantGroup">
                 <xsl:variable name="cType" select="@constantGroup"/>
@@ -363,8 +372,17 @@ import com.google.gson.GsonBuilder;
     <!--     ============================================== -->
 
 
-    <xsl:template mode="declareGettersSetters" match="Message">
 
+    <xsl:template mode="declareGettersSetters" match="Message">
+        <xsl:if test="./@db='true'">
+            public String getMongoId() {
+            return this.mMongoId;
+            }
+
+            public void setMongoId( String pMongoId ) {
+            this.mMongoId = pMongoId;
+            }
+        </xsl:if>
         <xsl:for-each select="Attribute">
             <xsl:if test="@constantGroup">
                 <xsl:apply-templates mode="declareConstantGetterSetter" select="."/>

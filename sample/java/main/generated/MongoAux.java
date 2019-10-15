@@ -17,6 +17,7 @@
 
     import org.bson.BsonType;
     import org.bson.Document;
+    import org.bson.types.ObjectId;
 
     import com.mongodb.client.model.Filters;
     import com.mongodb.client.result.DeleteResult;
@@ -169,12 +170,23 @@
         * CRUD INSERT methods
         */
         public void insertTestMessage( TestMessage pTestMessage ) {
-           mTestCollection.insertOne( pTestMessage.getMongoDocument());
+            Document tDoc = pTestMessage.getMongoDocument();
+            mTestCollection.insertOne( tDoc );
+            ObjectId _tId = tDoc.getObjectId("_id");
+            if (_tId != null) {
+                pTestMessage.setMongoId( _tId.toString());
+            }
         }
 
         public void insertTestMessage( List<TestMessage> pTestMessageList ) {
            List<Document> tList = pTestMessageList.stream().map( TestMessage::getMongoDocument).collect(Collectors.toList());
            mTestCollection.insertMany( tList );
+           for( int i = 0; i < tList.size(); i++ ) {
+             ObjectId _tId = tList.get(i).getObjectId("_id");
+             if (_tId != null) {
+                pTestMessageList.get(i).setMongoId( _tId.toString());
+             }
+           }
         }
 
     
@@ -203,6 +215,8 @@
         /**
         * CRUD FIND methods
         */
+
+
         public List<TestMessage> findAllTestMessage()
         {
            List<TestMessage> tResult = new ArrayList<>();
@@ -217,6 +231,26 @@
             }
             return tResult;
         }
+
+        public TestMessage findTestMessageByMongoId( String mMongoObjectId ) {
+        Bson tFilter=  Filters.eq("_id", new ObjectId(mMongoObjectId));
+
+        FindIterable<Document> tDocuments = this.mTestCollection.find( tFilter );
+        if (tDocuments == null) {
+            return null;
+        }
+
+        List<TestMessage> tResult = new ArrayList<>();
+        MongoCursor<Document> tIter = tDocuments.iterator();
+        while ( tIter.hasNext()) {
+        Document tDoc = tIter.next();
+        TestMessage tTestMessage = new TestMessage();
+        tTestMessage.decodeMongoDocument( tDoc );
+        tResult.add( tTestMessage );
+        }
+        return (tResult.size() > 0) ? tResult.get(0) : null;
+        }
+
 
         public List<TestMessage> findTestMessage( int pIntValue, String pStrValue ) {
         Bson tFilter= Filters.and( 

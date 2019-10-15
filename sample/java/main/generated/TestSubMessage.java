@@ -16,6 +16,7 @@ import java.io.IOException;
     import org.bson.Document;
     import org.bson.conversions.Bson;
     import com.mongodb.BasicDBObject;
+    import org.bson.types.ObjectId;
     import com.hoddmimes.jsontransform.MessageMongoInterface;
     import com.hoddmimes.jsontransform.MongoDecoder;
     import com.hoddmimes.jsontransform.MongoEncoder;
@@ -164,8 +165,10 @@ import com.google.gson.GsonBuilder;
             Document tDoc = null;
             List<Document> tDocLst = null;
 
+
             MongoDecoder tDecoder = new MongoDecoder( pDoc );
-        
+
+            
            mIntValue = tDecoder.readInteger("intValue");
         
            mStrValue = tDecoder.readString("strValue");

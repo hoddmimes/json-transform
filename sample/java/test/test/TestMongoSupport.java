@@ -45,6 +45,15 @@ public class TestMongoSupport {
 
         // Test Insert Methods
         mDbAux.insertTestMessage(testMsg);
+        String tMongoObjectId = testMsg.getMongoId();
+
+        testMsg = mDbAux.findTestMessageByMongoId( tMongoObjectId );
+        if (testMsg != null) {
+            System.out.println("Find a single message by Mongo-object-id (should find one)");
+        } else {
+            System.out.println("error: Did not find a single message by Mongo-object-id");
+            System.exit(0);
+        }
 
 
         List<TestMessage> tList = new ArrayList<>();

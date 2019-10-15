@@ -16,6 +16,7 @@ import java.io.IOException;
     import org.bson.Document;
     import org.bson.conversions.Bson;
     import com.mongodb.BasicDBObject;
+    import org.bson.types.ObjectId;
     import com.hoddmimes.jsontransform.MessageMongoInterface;
     import com.hoddmimes.jsontransform.MongoDecoder;
     import com.hoddmimes.jsontransform.MongoEncoder;
@@ -34,6 +35,7 @@ import com.google.gson.GsonBuilder;
             public class TestMessage implements MessageInterface , MessageMongoInterface
             {
             
+                private String mMongoId = null;
                     private List<String> mStringArray;
                 private CG1 mConstValue;
                 private List<CG2> mConstArray;
@@ -58,6 +60,14 @@ import com.google.gson.GsonBuilder;
                     this.decode( tDecoder );
                }
     
+            public String getMongoId() {
+            return this.mMongoId;
+            }
+
+            public void setMongoId( String pMongoId ) {
+            this.mMongoId = pMongoId;
+            }
+        
             public TestMessage setStringArray(List<String> pStringArray ) {
             if ( pStringArray == null) {
             mStringArray = null;
@@ -433,8 +443,13 @@ import com.google.gson.GsonBuilder;
             Document tDoc = null;
             List<Document> tDocLst = null;
 
+
             MongoDecoder tDecoder = new MongoDecoder( pDoc );
-        
+
+            
+            ObjectId _tId = pDoc.get("_id", ObjectId.class);
+            this.mMongoId = _tId.toString();
+            
            mStringArray = tDecoder.readStringArray("stringArray");
         
                       mConstValue = (CG1) tDecoder.readConstant("constValue", CG1.class); 
