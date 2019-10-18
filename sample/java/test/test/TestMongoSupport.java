@@ -98,6 +98,19 @@ public class TestMongoSupport {
         } else {
             System.out.println("Hmmmm, message NOT sucessfully deleted");
         }
+
+        //
+        tml = mDbAux.findTestMessage( 103, "key-103");
+        testMsg = tml.get(0);
+
+        long tCount = mDbAux.deleteTestMessageByMongoId( testMsg.getMongoId());
+        if (tCount == 0) {
+            System.out.println("Hmmmm, message (103) NOT sucessfully deleted");
+        } else {
+            System.out.println("Message (103) sucessfully deleted");
+        }
+
+
     }
 
 

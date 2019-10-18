@@ -249,6 +249,12 @@
            return tResult.getDeletedCount();
         }
 
+        public long delete<xsl:value-of select="extensions:upperFirst(@name)"/>ByMongoId( String pMongoObjectId) {
+            Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
+            DeleteResult tResult = m<xsl:call-template name="getCollectionName"/>Collection.deleteOne( tFilter );
+            return tResult.getDeletedCount();
+        }
+
         <xsl:if test="count(Attribute[@dbKey]) &gt; 1">
             public long delete<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:call-template name="crudParams"/> ) {
                 Bson tKeyFilter= Filters.and( <xsl:for-each select="Attribute[@dbKey]">
@@ -339,8 +345,8 @@
             return tResult;
         }
 
-        public <xsl:value-of select='@name'/> find<xsl:value-of select="extensions:upperFirst(@name)"/>ByMongoId( String mMongoObjectId ) {
-        Bson tFilter=  Filters.eq("_id", mMongoObjectId);
+        public <xsl:value-of select='@name'/> find<xsl:value-of select="extensions:upperFirst(@name)"/>ByMongoId( String pMongoObjectId ) {
+        Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
 
         FindIterable&lt;Document&gt; tDocuments = this.m<xsl:call-template name="getCollectionName"/>Collection.find( tFilter );
         if (tDocuments == null) {

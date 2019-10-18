@@ -144,6 +144,12 @@
            return tResult.getDeletedCount();
         }
 
+        public long deleteTestMessageByMongoId( String pMongoObjectId) {
+            Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
+            DeleteResult tResult = mTestCollection.deleteOne( tFilter );
+            return tResult.getDeletedCount();
+        }
+
         
             public long deleteTestMessage( int pIntValue, String pStrValue ) {
                 Bson tKeyFilter= Filters.and( 
@@ -232,8 +238,8 @@
             return tResult;
         }
 
-        public TestMessage findTestMessageByMongoId( String mMongoObjectId ) {
-        Bson tFilter=  Filters.eq("_id", new ObjectId(mMongoObjectId));
+        public TestMessage findTestMessageByMongoId( String pMongoObjectId ) {
+        Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
 
         FindIterable<Document> tDocuments = this.mTestCollection.find( tFilter );
         if (tDocuments == null) {
