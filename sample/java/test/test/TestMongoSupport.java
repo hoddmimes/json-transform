@@ -1,4 +1,5 @@
 package test;
+import com.mongodb.client.result.UpdateResult;
 import generated.*;
 
 import java.text.SimpleDateFormat;
@@ -89,6 +90,9 @@ public class TestMongoSupport {
         tml = mDbAux.findTestMessage( 102, "key-102");
         testMsg = tml.get(0);
         System.out.println("Update a single message \"1998-06-11 16:36:32.000\" == \"" + testMsg.getTimeString() +"\"");
+
+        testMsg.setTimeString("1998-06-11 16:16:16.000");
+        UpdateResult tRes = mDbAux.updateTestMessageByMongoId( testMsg.getMongoId(), testMsg );
 
         // Test Delete Method
         mDbAux.deleteTestMessageByIntValue( 102 );

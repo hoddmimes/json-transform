@@ -199,6 +199,14 @@
         /**
         * CRUD UPDATE (INSERT) methods
         */
+        public UpdateResult updateTestMessageByMongoId( String pMongoObjectId, TestMessage pTestMessage ) {
+            Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
+            Document tDocSet = new Document("$set", pTestMessage.getMongoDocument());
+            UpdateResult tUpdSts = mTestCollection.updateOne( tFilter, tDocSet);
+            return tUpdSts;
+        }
+
+
         public UpdateResult updateTestMessage( int pIntValue, String pStrValue, TestMessage pTestMessage, boolean pUpdateAllowInsert ) {
           UpdateOptions tOptions = new UpdateOptions().upsert(pUpdateAllowInsert);
           Bson tFilter= Filters.and( 
