@@ -308,7 +308,7 @@
         public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>ByMongoId( String pMongoObjectId, <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/> ) {
             Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
             Document tDocSet = new Document("$set", p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument());
-            UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tFilter, tDocSet);
+            UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tFilter, tDocSet, null);
             return tUpdSts;
         }
 
@@ -336,6 +336,25 @@
         /**
         * CRUD FIND methods
         */
+
+        public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="extensions:upperFirst(@name)"/>( Bson pFilter  ) {
+
+        FindIterable&lt;Document&gt; tDocuments = this.m<xsl:call-template name="getCollectionName"/>Collection.find( pFilter );
+        if (tDocuments == null) {
+        return null;
+        }
+
+        List&lt;<xsl:value-of select='@name'/>&gt; tResult = new ArrayList&lt;&gt;();
+        MongoCursor&lt;Document&gt; tIter = tDocuments.iterator();
+        while ( tIter.hasNext()) {
+        Document tDoc = tIter.next();
+        <xsl:value-of select='@name'/> t<xsl:value-of select="extensions:upperFirst(@name)"/> = new <xsl:value-of select='@name'/>();
+        t<xsl:value-of select="extensions:upperFirst(@name)"/>.decodeMongoDocument( tDoc );
+        tResult.add( t<xsl:value-of select="extensions:upperFirst(@name)"/> );
+        }
+        return tResult;
+        }
+
 
 
         public List&lt;<xsl:value-of select='@name'/>&gt; findAll<xsl:value-of select="extensions:upperFirst(@name)"/>()
