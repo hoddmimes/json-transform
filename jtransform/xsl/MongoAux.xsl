@@ -337,6 +337,10 @@
         * CRUD FIND methods
         */
 
+        public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="extensions:upperFirst(@name)"/>( Bson pFilter  ) {
+         return find<xsl:value-of select="extensions:upperFirst(@name)"/>( pFilter, null );
+        }
+
         public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="extensions:upperFirst(@name)"/>( Bson pFilter, Document pSortDoc  ) {
 
         FindIterable&lt;Document&gt; tDocuments = (pSortDoc == null) ? this.m<xsl:call-template name="getCollectionName"/>Collection.find( pFilter ) :
