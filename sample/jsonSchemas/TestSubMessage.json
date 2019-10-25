@@ -6,14 +6,8 @@
      "properties" : { 
           "intValue" : { "minimum": 42, "maximum": 84, "type" : "integer" },
           "strValue" : { "pattern": "foo[X-Z]+bar", "type" : "string" },
-          "stringArray" : {
-            "items" : { "type" : "string" },
-            "type" : "array"
-          },
-          "intArray" : {
-            "items" : { "type" : "integer" },
-            "type" : "array"
-          }
+          "stringArray" : { "type" : "string" },
+          "intArray" : { "type" : "integer" }
      },
      "required": ["intValue"]
     

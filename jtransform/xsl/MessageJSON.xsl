@@ -121,6 +121,8 @@
             package <xsl:value-of select="$package"/>;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Stack;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -144,6 +146,7 @@ import java.io.IOException;
 import com.hoddmimes.jsontransform.MessageInterface;
 import com.hoddmimes.jsontransform.JsonDecoder;
 import com.hoddmimes.jsontransform.JsonEncoder;
+import com.hoddmimes.jsontransform.ListFactory;
 import com.google.gson.JsonObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -184,10 +187,10 @@ import com.google.gson.GsonBuilder;
         <xsl:for-each select="Attribute[not(@dbTransient='true')]">
 
             <xsl:if test="@constantGroup">
-                <xsl:if test="not(@array)">
-                      m<xsl:value-of select="extensions:upperFirst (@name)"/> = (<xsl:value-of select="@constantGroup"/>) tDecoder.readConstant("<xsl:value-of select='@name'/>", <xsl:value-of select="@constantGroup"/>.class); </xsl:if>
-                <xsl:if test="@array">
-                      m<xsl:value-of select="extensions:upperFirst (@name)"/> = (List&lt;<xsl:value-of select="@constantGroup"/>&gt;)tDecoder.readConstArray("<xsl:value-of select='@name'/>", <xsl:value-of select="@constantGroup"/>.class); </xsl:if>
+                <xsl:if test="not(@list)">
+                    m<xsl:value-of select="extensions:upperFirst (@name)"/> = (<xsl:value-of select="@constantGroup"/>) tDecoder.readConstant("<xsl:value-of select='@name'/>", <xsl:value-of select="@constantGroup"/>.class); </xsl:if>
+                <xsl:if test="@list">
+                    m<xsl:value-of select="extensions:upperFirst (@name)"/> = (List&lt;<xsl:value-of select="@constantGroup"/>&gt;)tDecoder.readConstArray("<xsl:value-of select='@name'/>", "<xsl:value-of select='@list'/>", <xsl:value-of select="@constantGroup"/>.class); </xsl:if>
             </xsl:if>
 
             <xsl:if test="not(@constantGroup)">
@@ -204,18 +207,18 @@ import com.google.gson.GsonBuilder;
 
     <xsl:template mode="standardTypeFromMongoDoc" match="Attribute">
         <xsl:variable name="dataType" select="@type"/>
-        <xsl:if test="not(@array)">
+        <xsl:if test="not(@list)">
            <xsl:variable name="decoder" select="$typeTable/Type[@name=$dataType]/@decoder"/>
            m<xsl:value-of select="extensions:upperFirst (@name)"/> = tDecoder.<xsl:value-of select="$decoder"/>("<xsl:value-of select='@name'/>");
         </xsl:if>
-        <xsl:if test="@array">
+        <xsl:if test="@list">
            <xsl:variable name="decoder" select="$typeTable/Type[@name=$dataType]/@arrayDecoder"/>
-           m<xsl:value-of select="extensions:upperFirst (@name)"/> = tDecoder.<xsl:value-of select="$decoder"/>("<xsl:value-of select='@name'/>");
+           m<xsl:value-of select="extensions:upperFirst (@name)"/> = tDecoder.<xsl:value-of select="$decoder"/>("<xsl:value-of select='@name'/>", "<xsl:value-of select='@list'/>");
         </xsl:if>
     </xsl:template>
 
     <xsl:template mode="messageFromMongoDoc" match="Attribute">
-        <xsl:if test="not(@array)">
+        <xsl:if test="not(@list)">
             tDoc = (Document) tDecoder.readMessage("<xsl:value-of select="@name"/>");
             if (tDoc == null) {
               m<xsl:value-of select="extensions:upperFirst (@name)"/> = null;
@@ -223,12 +226,12 @@ import com.google.gson.GsonBuilder;
                m<xsl:value-of select="extensions:upperFirst (@name)"/> = new <xsl:value-of select="@type"/>();
                m<xsl:value-of select="extensions:upperFirst (@name)"/>.decodeMongoDocument( tDoc );
             } </xsl:if>
-        <xsl:if test="@array">
-                tDocLst = (List&lt;Document&gt;) tDecoder.readMessageArray("<xsl:value-of select='@name'/>");
+        <xsl:if test="@list">
+                tDocLst = (List&lt;Document&gt;) tDecoder.readMessageArray("<xsl:value-of select='@name'/>", "<xsl:value-of select='@list'/>" );
                 if (tDocLst == null) {
                    m<xsl:value-of select="extensions:upperFirst (@name)"/> = null;
                 } else {
-                   m<xsl:value-of select="extensions:upperFirst (@name)"/> = new ArrayList&lt;&gt;();
+                   m<xsl:value-of select="extensions:upperFirst (@name)"/> = ListFactory.getList("<xsl:value-of select='@list'/>");
                    for( Document doc :  tDocLst ) {
                     <xsl:value-of select="@type"/>  m = new <xsl:value-of select="extensions:upperFirst (@type)"/>();
                     m.decodeMongoDocument( doc );
@@ -263,9 +266,9 @@ import com.google.gson.GsonBuilder;
             MongoEncoder tEncoder = new MongoEncoder();
         <xsl:for-each select="Attribute[not(@dbTransient='true')]">
            <xsl:if test="@constantGroup">
-               <xsl:if test="not(@array)">
+               <xsl:if test="not(@list)">
                    tEncoder.add( "<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> ); </xsl:if>
-               <xsl:if test="@array">
+               <xsl:if test="@list">
                    tEncoder.addConstArray("<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
            </xsl:if>
            <xsl:if test="not(@constantGroup)">
@@ -282,18 +285,18 @@ import com.google.gson.GsonBuilder;
     </xsl:template>
 
     <xsl:template mode="messageToMongoDoc" match="Attribute">
-        <xsl:if test="not(@array)">
+        <xsl:if test="not(@list)">
             tEncoder.add("<xsl:value-of select="@name"/>",   m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
-        <xsl:if test="@array">
+        <xsl:if test="@list">
             tEncoder.addMessageArray("<xsl:value-of select="@name"/>",  m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
     </xsl:template>
 
     <xsl:template mode="standardTypeToMongoDoc" match="Attribute">
             <xsl:variable name="dataType" select="@type"/>
-            <xsl:if test="@array">
+            <xsl:if test="@list">
                 <xsl:variable name="encoder" select="$typeTable/Type[@name=$dataType]/@arrayEncoder"/>
                 tEncoder.<xsl:value-of select="$encoder"/>( "<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
-            <xsl:if test="not(@array)">
+            <xsl:if test="not(@list)">
                 tEncoder.add("<xsl:value-of select="@name"/>",  m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
     </xsl:template>
 
@@ -345,14 +348,14 @@ import com.google.gson.GsonBuilder;
         <xsl:for-each select="Attribute">
             <xsl:if test="@constantGroup">
                 <xsl:variable name="cType" select="@constantGroup"/>
-                private <xsl:if test="@array">List&lt;<xsl:value-of select="$cType"/>&gt;</xsl:if><xsl:if test="not(@array)"><xsl:value-of select="$cType"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
+                private <xsl:if test="@list">List&lt;<xsl:value-of select="$cType"/>&gt;</xsl:if><xsl:if test="not(@list)"><xsl:value-of select="$cType"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
             <xsl:if test="not(@constantGroup)">
                 <xsl:variable name="dataType" select="@type"/>
                 <xsl:if test="$typeTable/Type[@name=$dataType]">
                     <xsl:variable name="dType" select="$typeTable/Type[@name=$dataType]/@type"/>
-                    private <xsl:if test="@array">List&lt;<xsl:value-of select="$dType"/>&gt;</xsl:if><xsl:if test="not(@array)"><xsl:value-of select="$dType"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
+                    private <xsl:if test="@list">List&lt;<xsl:value-of select="$dType"/>&gt;</xsl:if><xsl:if test="not(@list)"><xsl:value-of select="$dType"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
                 <xsl:if test="not($typeTable/Type[@name=$dataType])">
-                    private <xsl:if test="@array">List&lt;<xsl:value-of select="$dataType"/>&gt;</xsl:if><xsl:if test="not(@array)"><xsl:value-of select="@type"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
+                    private <xsl:if test="@list">List&lt;<xsl:value-of select="$dataType"/>&gt;</xsl:if><xsl:if test="not(@list)"><xsl:value-of select="@type"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
             </xsl:if>
         </xsl:for-each>
     </xsl:template>
@@ -398,7 +401,7 @@ import com.google.gson.GsonBuilder;
     </xsl:template>
 
     <xsl:template mode="declareConstantGetterSetter" match="Attribute">
-        <xsl:if test="not(@array)">
+        <xsl:if test="not(@list)">
             public <xsl:value-of select="../@name"/> set<xsl:value-of select="extensions:upperFirst (@name)"/>(<xsl:value-of select="@constantGroup"/> p<xsl:value-of select="extensions:upperFirst (@name)"/>) {
             m<xsl:value-of select="extensions:upperFirst (@name)"/> = p<xsl:value-of
                 select="extensions:upperFirst (@name)"/>;
@@ -409,7 +412,7 @@ import com.google.gson.GsonBuilder;
             return  Optional.ofNullable(m<xsl:value-of select="extensions:upperFirst (@name)"/>);
             }
         </xsl:if>
-        <xsl:if test="@array">
+        <xsl:if test="@list">
             public Optional&lt;List&lt;<xsl:value-of select="@constantGroup"/>&gt;&gt; get<xsl:value-of select="extensions:upperFirst (@name)"/>() {
             return  Optional.ofNullable(m<xsl:value-of select="extensions:upperFirst (@name)"/>) ;
             }
@@ -417,10 +420,8 @@ import com.google.gson.GsonBuilder;
             if (p<xsl:value-of select="extensions:upperFirst (@name)"/> == null) {
             m<xsl:value-of select="extensions:upperFirst (@name)"/> = null;
             } else {
-            m<xsl:value-of select="extensions:upperFirst (@name)"/> = new ArrayList&lt;&gt;(p<xsl:value-of
-                select="extensions:upperFirst (@name)"/>.size());
-            m<xsl:value-of select="extensions:upperFirst (@name)"/>.addAll( p<xsl:value-of
-                select="extensions:upperFirst (@name)"/> );
+            m<xsl:value-of select="extensions:upperFirst (@name)"/> = ListFactory.getList("<xsl:value-of select='@list'/>");
+            m<xsl:value-of select="extensions:upperFirst (@name)"/>.addAll( p<xsl:value-of select="extensions:upperFirst (@name)"/> );
             }
             return this;
             }
@@ -433,15 +434,13 @@ import com.google.gson.GsonBuilder;
         <xsl:variable name="dataType" select="@type"/>
         <xsl:variable name="type" select="$typeTable/Type[@name=$dataType]/@type"/>
 
-        <xsl:if test="@array">
+        <xsl:if test="@list">
             public <xsl:value-of select="../@name"/> set<xsl:value-of select="extensions:upperFirst (@name)"/>(List&lt;<xsl:value-of select="$type"/>&gt; p<xsl:value-of select="extensions:upperFirst (@name)"/> ) {
             if ( p<xsl:value-of select="extensions:upperFirst (@name)"/> == null) {
             m<xsl:value-of select="extensions:upperFirst (@name)"/> = null;
             } else {
-            m<xsl:value-of select="extensions:upperFirst (@name)"/> = new ArrayList&lt;&gt;( p<xsl:value-of
-                select="extensions:upperFirst (@name)"/>.size() );
-            m<xsl:value-of select="extensions:upperFirst (@name)"/>.addAll( p<xsl:value-of
-                select="extensions:upperFirst (@name)"/> );
+            m<xsl:value-of select="extensions:upperFirst (@name)"/> = ListFactory.getList("<xsl:value-of select='@list'/>");
+            m<xsl:value-of select="extensions:upperFirst (@name)"/>.addAll( p<xsl:value-of select="extensions:upperFirst (@name)"/> );
             }
             return this;
             }
@@ -452,7 +451,7 @@ import com.google.gson.GsonBuilder;
             }
         </xsl:if>
 
-        <xsl:if test="not(@array)">
+        <xsl:if test="not(@list)">
             public <xsl:value-of select="../@name"/> set<xsl:value-of select="extensions:upperFirst (@name)"/>( <xsl:value-of select="$type"/> p<xsl:value-of select="extensions:upperFirst (@name)"/> ) {
             m<xsl:value-of select="extensions:upperFirst (@name)"/> = p<xsl:value-of
                 select="extensions:upperFirst (@name)"/>;
@@ -469,17 +468,16 @@ import com.google.gson.GsonBuilder;
     <xsl:template mode="declareMessageGetterSetter" match="Attribute">
         <xsl:variable name="dataType" select="@type"/>
 
-        <xsl:if test="@array">
+        <xsl:if test="@list">
             public <xsl:value-of select="../@name"/> set<xsl:value-of select="extensions:upperFirst (@name)"/>( List&lt;<xsl:value-of select="$dataType"/>&gt; p<xsl:value-of select="extensions:upperFirst (@name)"/> ) {
               if (p<xsl:value-of select="extensions:upperFirst (@name)"/> == null) {
                 m<xsl:value-of select="extensions:upperFirst (@name)"/> = null;
                 return this;
               }
 
-            int tSize = p<xsl:value-of select="extensions:upperFirst (@name)"/>.size();
 
             if ( m<xsl:value-of select="extensions:upperFirst (@name)"/> == null)
-            m<xsl:value-of select="extensions:upperFirst (@name)"/> = new ArrayList&lt;&gt;( tSize + 1 );
+            m<xsl:value-of select="extensions:upperFirst (@name)"/> = ListFactory.getList("<xsl:value-of select='@list'/>");
 
 
             m<xsl:value-of select="extensions:upperFirst (@name)"/> .addAll( p<xsl:value-of
@@ -491,7 +489,7 @@ import com.google.gson.GsonBuilder;
             public <xsl:value-of select="../@name"/> add<xsl:value-of select="extensions:upperFirst (@name)"/>( List&lt;<xsl:value-of select="$dataType"/>&gt; p<xsl:value-of select="extensions:upperFirst (@name)"/> ) {
 
             if ( m<xsl:value-of select="extensions:upperFirst (@name)"/> == null)
-            m<xsl:value-of select="extensions:upperFirst (@name)"/> = new ArrayList&lt;&gt;();
+            m<xsl:value-of select="extensions:upperFirst (@name)"/> = ListFactory.getList("<xsl:value-of select='@list'/>");
 
             m<xsl:value-of select="extensions:upperFirst (@name)"/> .addAll( p<xsl:value-of
                 select="extensions:upperFirst (@name)"/> );
@@ -505,7 +503,7 @@ import com.google.gson.GsonBuilder;
             }
 
             if ( m<xsl:value-of select="extensions:upperFirst (@name)"/> == null) {
-            m<xsl:value-of select="extensions:upperFirst (@name)"/> = new ArrayList&lt;&gt;();
+            m<xsl:value-of select="extensions:upperFirst (@name)"/> = ListFactory.getList("<xsl:value-of select='@list'/>");
             }
 
             m<xsl:value-of select="extensions:upperFirst (@name)"/>.add( p<xsl:value-of
@@ -520,14 +518,14 @@ import com.google.gson.GsonBuilder;
                 return  Optional.ofNullable(null);
             }
 
-            List&lt;<xsl:value-of select="$dataType"/>&gt; tList = new ArrayList&lt;&gt;( m<xsl:value-of select="extensions:upperFirst (@name)"/>.size() );
+            List&lt;<xsl:value-of select="$dataType"/>&gt; tList = ListFactory.getList("<xsl:value-of select='@list'/>");
             tList.addAll( m<xsl:value-of select="extensions:upperFirst (@name)"/> );
             return  Optional.ofNullable(tList);
             }
 
         </xsl:if>
 
-        <xsl:if test="not(@array)">
+        <xsl:if test="not(@list)">
 
             public Optional&lt;<xsl:value-of select="$dataType"/>&gt; get<xsl:value-of select="extensions:upperFirst (@name)"/>() {
               return  Optional.ofNullable(m<xsl:value-of select="extensions:upperFirst (@name)"/>);
@@ -611,11 +609,11 @@ import com.google.gson.GsonBuilder;
             pEncoder.add("<xsl:value-of select="@name"/>", tEncoder.toJson() );</xsl:if>
 
         <xsl:for-each select="Attribute">
-            //Encode Attribute: m<xsl:value-of select="extensions:upperFirst (@name)"/> Type: <xsl:value-of select="@type"/> Array: <xsl:if test="@array">true</xsl:if><xsl:if test="not(@array)">false</xsl:if>
-            <xsl:if test="@array">
+            //Encode Attribute: m<xsl:value-of select="extensions:upperFirst (@name)"/> Type: <xsl:value-of select="@type"/> List: <xsl:if test="@list">true</xsl:if><xsl:if test="not(@list)">false</xsl:if>
+            <xsl:if test="@list">
                 <xsl:apply-templates mode="encoderArray" select="."/>
             </xsl:if>
-            <xsl:if test="not(@array)">
+            <xsl:if test="not(@list)">
                 <xsl:apply-templates mode="encoderSingle" select="."/>
             </xsl:if>
         </xsl:for-each>
@@ -631,11 +629,11 @@ import com.google.gson.GsonBuilder;
             JsonDecoder tDecoder = pDecoder.get("<xsl:value-of select="@name"/>");
         </xsl:if>
         <xsl:for-each select="Attribute">
-            //Decode Attribute: m<xsl:value-of select="extensions:upperFirst (@name)"/> Type:<xsl:value-of select="@type"/> Array: <xsl:if test="@array">true</xsl:if><xsl:if test="not(@array)">false</xsl:if>
-            <xsl:if test="@array">
+            //Decode Attribute: m<xsl:value-of select="extensions:upperFirst (@name)"/> Type:<xsl:value-of select="@type"/> List: <xsl:if test="@list">true</xsl:if><xsl:if test="not(@list)">false</xsl:if>
+            <xsl:if test="@list">
                 <xsl:apply-templates mode="decoderArray" select="."/>
             </xsl:if>
-            <xsl:if test="not(@array)">
+            <xsl:if test="not(@list)">
                 <xsl:apply-templates mode="decoderSingle" select="."/>
             </xsl:if>
         </xsl:for-each>
@@ -668,13 +666,13 @@ import com.google.gson.GsonBuilder;
         <xsl:variable name="dataType" select="@type"/>
 
         <xsl:if test="@constantGroup">
-            m<xsl:value-of select="extensions:upperFirst (@name)"/> = (List&lt;<xsl:value-of select="@constantGroup"/>&gt;)tDecoder.readConstantArray("<xsl:value-of select="@name"/>", <xsl:value-of select="@constantGroup"/>.class );
+            m<xsl:value-of select="extensions:upperFirst (@name)"/> = (List&lt;<xsl:value-of select="@constantGroup"/>&gt;)tDecoder.readConstantArray("<xsl:value-of select='@name'/>", "<xsl:value-of select='@name'/>", <xsl:value-of select="@constantGroup"/>.class );
         </xsl:if>
         <xsl:if test="$typeTable/Type[@name=$dataType]">
-            m<xsl:value-of select="extensions:upperFirst (@name)"/> = tDecoder.<xsl:value-of select="$typeTable/Type[@name=$dataType]/@arrayDecoder"/>("<xsl:value-of select="@name"/>");
+            m<xsl:value-of select="extensions:upperFirst (@name)"/> = tDecoder.<xsl:value-of select="$typeTable/Type[@name=$dataType]/@arrayDecoder"/>("<xsl:value-of select="@name"/>", "<xsl:value-of select="@list"/>");
         </xsl:if>
         <xsl:if test="not($typeTable/Type[@name=$dataType]) and not(@constantGroup)">
-            m<xsl:value-of select="extensions:upperFirst (@name)"/> = (List&lt;<xsl:value-of select="$dataType"/>&gt;) tDecoder.readMessageArray( "<xsl:value-of select="@name"/>", <xsl:value-of select="$dataType"/>.class );
+            m<xsl:value-of select="extensions:upperFirst (@name)"/> = (List&lt;<xsl:value-of select="$dataType"/>&gt;) tDecoder.readMessageArray( "<xsl:value-of select="@name"/>", "<xsl:value-of select='@list'/>", <xsl:value-of select="$dataType"/>.class );
         </xsl:if>
     </xsl:template>
 

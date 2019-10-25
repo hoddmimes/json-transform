@@ -308,7 +308,7 @@
         public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>ByMongoId( String pMongoObjectId, <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/> ) {
             Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
             Document tDocSet = new Document("$set", p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument());
-            UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tFilter, tDocSet, null);
+            UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tFilter, tDocSet, new UpdateOptions());
             return tUpdSts;
         }
 

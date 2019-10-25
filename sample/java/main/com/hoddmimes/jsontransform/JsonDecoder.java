@@ -4,9 +4,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 
 import static java.lang.Enum.*;
 
@@ -18,6 +16,7 @@ public class JsonDecoder
     public JsonDecoder(JsonObject pJsonObject) {
         mDecoder = pJsonObject;
     }
+
 
     public JsonDecoder(String pJsonMsgString) {
         JsonParser tParser = new JsonParser();
@@ -39,12 +38,12 @@ public class JsonDecoder
         return mDecoder.get(pAttribute).getAsBoolean();
     }
 
-    public List<Boolean> readBooleanArray(String pAttribute) {
+    public List<Boolean> readBooleanArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<Boolean> tList = new ArrayList<>();
+        List<Boolean> tList =  ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             tList.add(tArr.get(i).getAsBoolean());
         }
@@ -58,12 +57,12 @@ public class JsonDecoder
         return mDecoder.get(pAttribute).getAsByte();
     }
 
-    public List<Byte> readByteArray(String pAttribute) {
+    public List<Byte> readByteArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<Byte> tList = new ArrayList<>();
+        List<Byte> tList =  ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             tList.add(tArr.get(i).getAsByte());
         }
@@ -77,12 +76,12 @@ public class JsonDecoder
         return mDecoder.get(pAttribute).getAsShort();
     }
 
-    public List<Short> readShortArray(String pAttribute) {
+    public List<Short> readShortArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<Short> tList = new ArrayList<>();
+        List<Short> tList = ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             tList.add(tArr.get(i).getAsShort());
         }
@@ -96,12 +95,12 @@ public class JsonDecoder
         return mDecoder.get(pAttribute).getAsInt();
     }
 
-    public List<Integer> readIntegerArray(String pAttribute) {
+    public List<Integer> readIntegerArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<Integer> tList = new ArrayList<>();
+        List<Integer> tList = ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             tList.add(tArr.get(i).getAsInt());
         }
@@ -115,12 +114,12 @@ public class JsonDecoder
         return mDecoder.get(pAttribute).getAsCharacter();
     }
 
-    public List<Character> readCharacterArray(String pAttribute) {
+    public List<Character> readCharacterArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<Character> tList = new ArrayList<>();
+        List<Character> tList =  ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             tList.add(tArr.get(i).getAsCharacter());
         }
@@ -134,12 +133,12 @@ public class JsonDecoder
         return mDecoder.get(pAttribute).getAsLong();
     }
 
-    public List<Long> readLongArray(String pAttribute) {
+    public List<Long> readLongArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<Long> tList = new ArrayList<>();
+        List<Long> tList = ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             tList.add(tArr.get(i).getAsLong());
         }
@@ -153,12 +152,12 @@ public class JsonDecoder
         return mDecoder.get(pAttribute).getAsDouble();
     }
 
-    public List<Double> readDoubleArray(String pAttribute) {
+    public List<Double> readDoubleArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<Double> tList = new ArrayList<>();
+        List<Double> tList = ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             tList.add(tArr.get(i).getAsDouble());
         }
@@ -172,12 +171,12 @@ public class JsonDecoder
         return mDecoder.get(pAttribute).getAsString();
     }
 
-    public List<String> readStringArray(String pAttribute) {
+    public List<String> readStringArray(String pAttribute, String pListType ) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<String> tList = new ArrayList<>();
+        List<String> tList = ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             tList.add(tArr.get(i).getAsString());
         }
@@ -192,12 +191,12 @@ public class JsonDecoder
         return Base64.getDecoder().decode(b64Str);
     }
 
-    public List<byte[]> readByteVectorArray(String pAttribute) {
+    public List<byte[]> readByteVectorArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<byte[]> tList = new ArrayList<>();
+        List<byte[]> tList =  ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
             String b64Str = tArr.get(i).getAsString();
             tList.add( Base64.getDecoder().decode(b64Str));
@@ -222,13 +221,13 @@ public class JsonDecoder
         return mi;
     }
 
-    public List<? extends MessageInterface> readMessageArray( String pAttribute, Class pClass ) {
+    public List<? extends MessageInterface> readMessageArray( String pAttribute, String pListType, Class pClass ) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
 
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<MessageInterface> tList = new ArrayList<>();
+        List<MessageInterface> tList = ListFactory.getList( pListType );
         MessageInterface mi;
 
         for (int i = 0; i < tArr.size(); i++) {
@@ -253,12 +252,12 @@ public class JsonDecoder
         return  valueOf(pEnumClass, tEnumValueStr);
     }
 
-    public List<? extends Enum> readConstantArray( String pAttribute, Class pEnumClass ) {
+    public List<? extends Enum> readConstantArray( String pAttribute, String pListType, Class pEnumClass ) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        ArrayList<Enum> tList = new ArrayList<>();
+        List<Enum> tList = ListFactory.getEnumList( pListType );
         MessageInterface mi = null;
 
         for (int i = 0; i < tArr.size(); i++) {
@@ -277,11 +276,11 @@ public class JsonDecoder
         return Base64.getDecoder().decode( pStr );
     }
 
-    public static List<byte[]> stringsToByteArrays( List<String> pStrLst ) {
+    public static List<byte[]> stringsToByteArrays( List<String> pStrLst, String pListType ) {
         if (pStrLst == null) {
             return null;
         }
-        List<byte[]> tByteArr = new ArrayList<>();
+        List<byte[]> tByteArr = ListFactory.getList( pListType );
         for( String tStr: pStrLst ) {
             tByteArr.add( Base64.getDecoder().decode( tStr ));
         }
@@ -295,7 +294,7 @@ public class JsonDecoder
             return Enum.valueOf(pEnumType, pConstStr);
     }
 
-    public static List<?> stringsToConsts(  Class<? extends Enum> pEnumType, List<String> pConstStrings ) {
+    public static List<?> stringsToConsts(  Class<? extends Enum> pEnumType, String pListType,  List<String> pConstStrings ) {
         if (pConstStrings == null) {
             return null;
         }
@@ -303,7 +302,7 @@ public class JsonDecoder
         for( String pStr : pConstStrings) {
             tConstLst.add(stringToConst(pEnumType, pStr));
         }
-        return tConstLst;
+        return ListFactory.converEnumtList(tConstLst, pListType);
     }
 
 }

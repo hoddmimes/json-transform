@@ -2,9 +2,7 @@ package com.hoddmimes.jsontransform;
 
 import org.bson.Document;
 
-import java.util.ArrayList;
-import java.util.Base64;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MongoDecoder
@@ -88,62 +86,65 @@ public class MongoDecoder
      *
      * ==========================================================================================
      */
-    public List<Boolean> readBooleanArray( String pAttribute) {
-        return (List<Boolean>) mDoc.get( pAttribute );
+
+
+
+    public List<Boolean> readBooleanArray( String pAttribute, String pListType) {
+        return (List<Boolean>) ListFactory.convertList( (List<Boolean>) mDoc.get( pAttribute ), pListType);
     }
 
-    public List<byte[]> readByteArray( String pAttribute) {
+    public List<byte[]> readByteArray( String pAttribute, String pListType) {
         List<String> tStrLst = (List<String>) mDoc.get( pAttribute );
-        return stringsToByteArrays( tStrLst );
+        return stringsToByteArrays( tStrLst, pListType );
     }
 
-    public List<Short> readShortArray( String pAttribute) {
+    public List<Short> readShortArray( String pAttribute, String pListType) {
         List<Integer> tList = (List<Integer>) mDoc.get( pAttribute );
         if (tList == null) {
             return null;
         }
         List<Short> tRetLst  = tList.stream().map( Integer::shortValue).collect(Collectors.toList());
-        return tRetLst;
+        return ListFactory.convertList(tRetLst, pListType);
     }
 
-    public List<Integer> readIntegerArray( String pAttribute) {
-        return (List<Integer>) mDoc.get( pAttribute );
+    public List<Integer> readIntegerArray( String pAttribute, String pListType) {
+        return (List<Integer>) ListFactory.convertList((List<Integer>) mDoc.get( pAttribute ), pListType );
     }
 
-    public List<Long> readLongArray( String pAttribute) {
-        return (List<Long>) mDoc.get( pAttribute );
+    public List<Long> readLongArray( String pAttribute, String pListType) {
+        return (List<Long>) ListFactory.convertList((List<Long>) mDoc.get( pAttribute ), pListType );
     }
 
-    public List<Double> readDoubleArray( String pAttribute) {
-        return (List<Double>) mDoc.get( pAttribute );
+    public List<Double> readDoubleArray( String pAttribute, String pListType) {
+        return (List<Double>) ListFactory.convertList((List<Double>)mDoc.get( pAttribute ), pListType);
     }
 
-    public List<Character> readCharacterArray( String pAttribute) {
+    public List<Character> readCharacterArray( String pAttribute, String pListType) {
         List<String> tList = (List<String>) mDoc.get( pAttribute );
         if (tList == null) {
             return null;
         }
         List<Character> tRetLst  = tList.stream().map( s ->{ return s.charAt(0);}).collect(Collectors.toList());
-        return tRetLst;
+        return ListFactory.convertList(tRetLst, pListType);
     }
 
-    public List<String> readStringArray( String pAttribute) {
-        return (List<String>) mDoc.get( pAttribute );
+    public List<String> readStringArray( String pAttribute, String pListType) {
+        return (List<String>) ListFactory.convertList((List<String>)mDoc.get( pAttribute ), pListType);
     }
 
-    public List<byte[]> readByteVectorArray( String pAttribute) {
+    public List<byte[]> readByteVectorArray( String pAttribute, String pListType) {
         List<String> tStrLst =  (List<String>) mDoc.get( pAttribute );
-        return stringsToByteArrays( tStrLst );
+        return stringsToByteArrays( tStrLst, pListType );
     }
 
-    public List<?>  readConstArray( String pAttribute, Class<? extends Enum> pEnumType) {
+    public List<?>  readConstArray( String pAttribute, String pListType, Class<? extends Enum> pEnumType) {
         List<String> tStrLst =  (List<String>) mDoc.get( pAttribute );
-        return stringsToConsts( pEnumType, tStrLst );
+        return stringsToConsts( pEnumType, pListType, tStrLst );
     }
 
 
-    public List<Document> readMessageArray( String pAttribute ) {
-        return (List<Document>) mDoc.get( pAttribute );
+    public List<Document> readMessageArray( String pAttribute, String pListType ) {
+        return ListFactory.convertList((List<Document>) mDoc.get( pAttribute ), pListType );
     }
 
 
@@ -162,7 +163,7 @@ public class MongoDecoder
         return Base64.getDecoder().decode( pStr );
     }
 
-    private List<byte[]> stringsToByteArrays(List<String> pStrLst ) {
+    private List<byte[]> stringsToByteArrays(List<String> pStrLst, String pListType ) {
         if (pStrLst == null) {
             return null;
         }
@@ -170,7 +171,7 @@ public class MongoDecoder
         for( String tStr: pStrLst ) {
             tByteArr.add( Base64.getDecoder().decode( tStr ));
         }
-        return tByteArr;
+        return ListFactory.convertList(tByteArr, pListType);
     }
 
     public Enum<?> stringToConst(  Class<? extends Enum> pEnumType, String pConstStr ) {
@@ -180,7 +181,7 @@ public class MongoDecoder
         return Enum.valueOf(pEnumType, pConstStr);
     }
 
-    private List<?> stringsToConsts(  Class<? extends Enum> pEnumType, List<String> pConstStrings ) {
+    private List<?> stringsToConsts(  Class<? extends Enum> pEnumType, String pListType, List<String> pConstStrings ) {
         if (pConstStrings == null) {
             return null;
         }
@@ -188,7 +189,7 @@ public class MongoDecoder
         for( String pStr : pConstStrings) {
             tConstLst.add(stringToConst(pEnumType, pStr));
         }
-        return tConstLst;
+        return ListFactory.converEnumtList(tConstLst, pListType);
     }
 
 

@@ -45,9 +45,9 @@ public class CreateTestMessage
     static TestSubMessage createSubMessage() {
         TestSubMessage sm = new TestSubMessage();
         int tArrayValue = cRand.nextInt(22) + 200;
-        sm.setIntArray( new ArrayList<Integer>(Collections.nCopies(cRand.nextInt(3) + 3, new Integer(tArrayValue))));
+        sm.setIntArray( createIntegerArray(cRand.nextInt(3) + 3, cRand.nextInt(100)));
         sm.setIntValue(cRand.nextInt(22) + 200);
-        sm.setStringArray(new ArrayList<String>(Collections.nCopies(cRand.nextInt(3) + 3, new String("str-submsg-array"))));
+        sm.setStringArray( createStringArray(cRand.nextInt(3) + 3, "str-submsg-array"));
         sm.setStrValue("submsg-string-value");
         return sm;
     }
@@ -61,6 +61,21 @@ public class CreateTestMessage
     }
 
 
+    private static List<String> createStringArray( int pSize, String pPrefix ) {
+        ArrayList<String> tList= new ArrayList( pSize );
+        for( int i = 0; i < pSize; i++ ) {
+           tList.add( new String( pPrefix) + "-" +String.valueOf((i+1)));
+        }
+        return tList;
+    }
+
+    private static List<Integer> createIntegerArray( int pSize, int pOffset ) {
+        ArrayList<Integer> tList= new ArrayList( pSize );
+        for( int i = 0; i < pSize; i++ ) {
+            tList.add(pOffset + i);
+        }
+        return tList;
+    }
 
     public static TestMessage createRandomTestMessage() {
         TestMessage testMsg = new TestMessage();
@@ -70,13 +85,13 @@ public class CreateTestMessage
         testMsg.setByteValue((byte) cRand.nextInt(100));
         testMsg.setConstArray(createCG2List(cRand.nextInt(5) + 1));
         testMsg.setConstValue(CG1.X1);
-        testMsg.setIntArray(new ArrayList<Integer>(Collections.nCopies(cRand.nextInt(5) + 1, new Integer(101))));
+        testMsg.setIntArray(createIntegerArray(cRand.nextInt(5) + 1, new Integer(101)));
         testMsg.setIntValue(102);
         testMsg.setLongValue(1010101010101L);
         testMsg.setMsgArray(createMsgArray(5));
         testMsg.setMsgValue(createSubMessage());
         testMsg.setShortValue((short) 33);
-        testMsg.setStringArray(new ArrayList<String>(Collections.nCopies(cRand.nextInt(5) + 1, new String("str-array"))));
+        testMsg.setStringArray( createStringArray(cRand.nextInt(5) + 1, "str-array"));
         testMsg.setStrValue("string-value");
         testMsg.setTimeString( SDF.format(System.currentTimeMillis()));
         return testMsg;
