@@ -312,6 +312,15 @@
             return tUpdSts;
         }
 
+        public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>(<xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/>, boolean pUpdateAllowInsert ) {
+        UpdateOptions tOptions = new UpdateOptions().upsert(pUpdateAllowInsert);
+        Bson tFilter= Filters.and( <xsl:for-each select="Attribute[@dbKey]">
+        Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="extensions:upperFirst(../@name)"/>.get<xsl:value-of select="extensions:upperFirst(@name)"/>())<xsl:if test="not(position()=last())">,</xsl:if></xsl:for-each>);
+        Document tDocSet = new Document("$set", p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument());
+        UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tFilter, tDocSet, tOptions);
+        return tUpdSts;
+        }
+
 
         public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:call-template name="crudParams"/>, <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/>, boolean pUpdateAllowInsert ) {
           UpdateOptions tOptions = new UpdateOptions().upsert(pUpdateAllowInsert);

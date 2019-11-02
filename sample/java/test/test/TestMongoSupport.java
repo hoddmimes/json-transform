@@ -48,7 +48,7 @@ public class TestMongoSupport {
         mDbAux.insertTestMessage(testMsg);
         String tMongoObjectId = testMsg.getMongoId();
 
-        testMsg = mDbAux.findTestMessageByMongoId( tMongoObjectId );
+        testMsg = mDbAux.findTestMessageByMongoId(tMongoObjectId);
         if (testMsg != null) {
             System.out.println("Find a single message by Mongo-object-id (should find one)");
         } else {
@@ -61,7 +61,7 @@ public class TestMongoSupport {
         for (int tKey = 101; tKey < 111; tKey++) {
             testMsg = CreateTestMessage.createRandomTestMessage();
             testMsg.setIntValue(tKey);
-            testMsg.setStrValue("key-" + String.valueOf( tKey ));
+            testMsg.setStrValue("key-" + String.valueOf(tKey));
             tList.add(testMsg);
         }
         mDbAux.insertTestMessage(tList);
@@ -70,29 +70,44 @@ public class TestMongoSupport {
         // Test Find Methods
 
         List<TestMessage> tMsgs = mDbAux.findAllTestMessage();
-        System.out.println("Find all messages, Retreived "  + tMsgs.size() + " messages (should be 11)");
+        System.out.println("Find all messages, Retreived " + tMsgs.size() + " messages (should be 11)");
 
-        List<TestMessage> tml = mDbAux.findTestMessage( 102, "key-102");
+        List<TestMessage> tml = mDbAux.findTestMessage(102, "key-102");
         System.out.println("Find a single message by all (2) keys Size: " + tml.size() + " (should find one)");
 
         tml = mDbAux.findTestMessageByIntValue(103);
         System.out.println("Find a single message by single (int) key Size: " + tml.size() + " (should find one)");
 
-        tml = mDbAux.findTestMessageByStrValue("key-103" );
+        tml = mDbAux.findTestMessageByStrValue("key-103");
         System.out.println("Find a single message by single (String) key Size: " + tml.size() + " (should find one)");
 
 
         // Test Update Method
-        tml = mDbAux.findTestMessage( 102, "key-102");
+        tml = mDbAux.findTestMessage(102, "key-102");
         testMsg = tml.get(0);
         testMsg.setTimeString("1998-06-11 16:36:32.000");
-        mDbAux.updateTestMessage( testMsg.getIntValue().get(), testMsg.getStrValue().get(), testMsg, false );
-        tml = mDbAux.findTestMessage( 102, "key-102");
+        mDbAux.updateTestMessage(testMsg.getIntValue().get(), testMsg.getStrValue().get(), testMsg, false);
+        tml = mDbAux.findTestMessage(102, "key-102");
         testMsg = tml.get(0);
-        System.out.println("Update a single message \"1998-06-11 16:36:32.000\" == \"" + testMsg.getTimeString() +"\"");
+        System.out.println("Update a single message \"1998-06-11 16:36:32.000\" == \"" + testMsg.getTimeString() + "\"");
 
         testMsg.setTimeString("1998-06-11 16:16:16.000");
-        UpdateResult tRes = mDbAux.updateTestMessageByMongoId( testMsg.getMongoId(), testMsg );
+        UpdateResult tRes = mDbAux.updateTestMessageByMongoId(testMsg.getMongoId(), testMsg);
+
+        testMsg.setTimeString("1998-06-11 16:16:16.111");
+        tRes = mDbAux.updateTestMessage(testMsg, false);
+        if ((tRes.getMatchedCount() != 1) || (tRes.getModifiedCount() != 1)) {
+            throw new RuntimeException("Failed to update TestMessage, simple update");
+        }
+
+        testMsg.setIntValue(666);
+        tRes = mDbAux.updateTestMessage(testMsg, true);
+        if ((tRes.getMatchedCount() != 0) || (tRes.getModifiedCount() != 1)) {
+            throw new RuntimeException("Failed to insert TestMessage, simple update");
+        }
+
+
+
 
         // Test Delete Method
         mDbAux.deleteTestMessageByIntValue( 102 );
