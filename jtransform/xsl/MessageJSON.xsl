@@ -371,6 +371,25 @@ import com.google.gson.GsonBuilder;
 
 
     <!--     ============================================== -->
+    <!--     			Declare initializer                  	   -->
+    <!--     ============================================== -->
+    <xsl:template mode="declareInitializer" match="Message">
+        <xsl:for-each select="Attribute">
+            <xsl:if test="@constantGroup">
+                <xsl:variable name="cType" select="@constantGroup"/>
+                private <xsl:if test="@list">List&lt;<xsl:value-of select="$cType"/>&gt;</xsl:if><xsl:if test="not(@list)"><xsl:value-of select="$cType"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
+            <xsl:if test="not(@constantGroup)">
+                <xsl:variable name="dataType" select="@type"/>
+                <xsl:if test="$typeTable/Type[@name=$dataType]">
+                    <xsl:variable name="dType" select="$typeTable/Type[@name=$dataType]/@type"/>
+                    private <xsl:if test="@list">List&lt;<xsl:value-of select="$dType"/>&gt;</xsl:if><xsl:if test="not(@list)"><xsl:value-of select="$dType"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
+                <xsl:if test="not($typeTable/Type[@name=$dataType])">
+                    private <xsl:if test="@list">List&lt;<xsl:value-of select="$dataType"/>&gt;</xsl:if><xsl:if test="not(@list)"><xsl:value-of select="@type"/></xsl:if> m<xsl:value-of select="extensions:upperFirst (@name)"/>;</xsl:if>
+            </xsl:if>
+        </xsl:for-each>
+    </xsl:template>
+
+    <!--     ============================================== -->
     <!--     			Declare DeclareGettersSetters                  	   -->
     <!--     ============================================== -->
 
