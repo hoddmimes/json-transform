@@ -107,13 +107,29 @@
             }
 
 
-            public void createDatabase() {
+            private boolean collectionExit( String pCollectionName, MongoIterable&lt;String&gt; pCollectionNameNames ) {
+              MongoCursor&lt;String&gt; tItr = pCollectionNameNames.iterator();
+              while( tItr.hasNext()) {
+                String tName = tItr.next();
+                if (tName.compareTo( pCollectionName ) == 0) {
+                  return true;
+                }
+              }
+              return false;
+            }
+
+
+            public void createDatabase( boolean pReset ) {
                 this.close();
                 MongoClient mClient = new MongoClient(mDbHost, mDbPort);
                 MongoDatabase tDB = mClient.getDatabase( mDbName );
+                MongoIterable&lt;String&gt; tCollectionNames = tDB.listCollectionNames();
+
                 <xsl:for-each select="Messages[@mongoSupport='true']">
                    <xsl:for-each select="Message[(@db='true' and @rootMessage='true')]">
-                        create<xsl:call-template name="getCollectionName"/>Collection();
+                       if ((pReset) || (!collectionExit("<xsl:call-template name="getCollectionName"/>", tCollectionNames ))) {
+                          create<xsl:call-template name="getCollectionName"/>Collection();
+                       }
                    </xsl:for-each>
                 </xsl:for-each>
             }
@@ -195,6 +211,7 @@
     import com.mongodb.MongoClient;
     import com.mongodb.client.MongoCollection;
     import com.mongodb.client.MongoDatabase;
+    import com.mongodb.client.MongoIterable;
     import com.mongodb.client.model.CreateCollectionOptions;
     import com.mongodb.client.model.ValidationOptions;
     import org.bson.conversions.Bson;
@@ -321,13 +338,14 @@
         public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/>, boolean pUpdateAllowInsert ) {
         UpdateOptions tOptions = new UpdateOptions().upsert(pUpdateAllowInsert);
         Bson tFilter= Filters.and( <xsl:for-each select="Attribute[@dbKey]">
-        Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="extensions:upperFirst(../@name)"/>.get<xsl:value-of select="extensions:upperFirst(@name)"/>())<xsl:if test="not(position()=last())">,</xsl:if></xsl:for-each>);
+        Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="extensions:upperFirst(../@name)"/>.get<xsl:value-of select="extensions:upperFirst(@name)"/>().get())<xsl:if test="not(position()=last())">,</xsl:if></xsl:for-each>);
 
         Document tDocSet = new Document("$set", p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument());
 
         UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tFilter, tDocSet, tOptions);
         return tUpdSts;
         }
+
 
         public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:call-template name="crudParams"/>, <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/>, boolean pUpdateAllowInsert ) {
           UpdateOptions tOptions = new UpdateOptions().upsert(pUpdateAllowInsert);
