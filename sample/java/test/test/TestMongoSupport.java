@@ -28,7 +28,7 @@ public class TestMongoSupport {
 
 
         // Create the database with collections and keys
-        mDbAux.createDatabase();
+        mDbAux.createDatabase(true);
 
         // Connect to the databse
         mDbAux.connectToDatabase();

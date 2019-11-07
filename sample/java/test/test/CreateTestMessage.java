@@ -91,8 +91,8 @@ public class CreateTestMessage
         testMsg.setMsgArray(createMsgArray(5));
         testMsg.setMsgValue(createSubMessage());
         testMsg.setShortValue((short) 33);
-        testMsg.setStringArray( createStringArray(cRand.nextInt(5) + 1, "str-array"));
-        testMsg.setStrValue("string-value");
+        testMsg.setStringArray( createStringArray(cRand.nextInt(5) + 1, "str-åäö-array"));
+        testMsg.setStrValue("string-value-åäö");
         testMsg.setTimeString( SDF.format(System.currentTimeMillis()));
         return testMsg;
     }

@@ -432,7 +432,7 @@ import com.google.gson.GsonBuilder;
             }
         </xsl:if>
         <xsl:if test="@list">
-            public Optional&lt;List&lt;<xsl:value-of select="@constantGroup"/>&gt;&gt; get<xsl:value-of select="extensions:upperFirst (@name)"/>() {
+            public Optional&lt;List&lt;<xsl:value-of select="@constantGroup"/>&gt;&gt; get<xsl:value-of select="extensions:upperFirst(@name)"/>() {
             return  Optional.ofNullable(m<xsl:value-of select="extensions:upperFirst (@name)"/>) ;
             }
             public <xsl:value-of select="../@name"/> set<xsl:value-of select="extensions:upperFirst (@name)"/>(List&lt;<xsl:value-of select="@constantGroup"/>&gt;p<xsl:value-of select="extensions:upperFirst (@name)"/>) {
@@ -537,9 +537,10 @@ import com.google.gson.GsonBuilder;
                 return  Optional.ofNullable(null);
             }
 
-            List&lt;<xsl:value-of select="$dataType"/>&gt; tList = ListFactory.getList("<xsl:value-of select='@list'/>");
-            tList.addAll( m<xsl:value-of select="extensions:upperFirst (@name)"/> );
-            return  Optional.ofNullable(tList);
+             //List&lt;<xsl:value-of select="$dataType"/>&gt; tList = ListFactory.getList("<xsl:value-of select='@list'/>");
+             //tList.addAll( m<xsl:value-of select="extensions:upperFirst (@name)"/> );
+             // return  Optional.ofNullable(tList);
+             return Optional.ofNullable(m<xsl:value-of select="extensions:upperFirst (@name)"/>);
             }
 
         </xsl:if>

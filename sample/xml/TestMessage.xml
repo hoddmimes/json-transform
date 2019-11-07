@@ -32,10 +32,10 @@
 		<Attribute name="byteValue" type="byte"/>
 		<Attribute name="doubleValue" type="double"/>
 		<Attribute name="shortValue" type="short" mandatory="true" min="0" max="100" multiplieOf="3" />
-		<Attribute name="intValue" type="int" mandatory="true" dbKey="unique"/>
+		<Attribute name="intValue" type="int" mandatory="true" dbKey="not-unique"/>
 		<Attribute name="intArray" type="int" list="stack" />
 		<Attribute name="longValue" type="long" />
-		<Attribute name="strValue" type="String" minLength="3" maxLength="12" mandatory="true"  pattern="foo-\\w*-\\d*" dbKey="unique"/>
+		<Attribute name="strValue" type="String" minLength="3" maxLength="12" mandatory="true"  pattern="foo-\\w*-\\d*" dbKey="not-unique"/>
 		<Attribute name="bytesValue" type="byte[]" dbTransient="true" />
 		<Attribute name="bytesArrayValue" type="byte[]" list="array"/>
 		<Attribute name="msgValue" type="TestSubMessage"/>
