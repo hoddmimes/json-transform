@@ -102,7 +102,7 @@ public class TestMongoSupport {
 
         testMsg.setIntValue(666);
         tRes = mDbAux.updateTestMessage(testMsg, true);
-        if ((tRes.getMatchedCount() != 0) || (tRes.getModifiedCount() != 1)) {
+        if ((tRes.getMatchedCount() != 0) || (tRes.getUpsertedId() == null)) {
             throw new RuntimeException("Failed to insert TestMessage, simple update");
         }
 
@@ -128,6 +128,21 @@ public class TestMongoSupport {
         } else {
             System.out.println("Message (103) sucessfully deleted");
         }
+
+
+        // Test CAR extention
+
+        Car carMsg = CreateTestMessage.createRandomCarMessage();
+        carMsg.setManufactor("SAAB");
+        carMsg.setProductionYear(1967);
+
+        // Test Insert Methods
+        mDbAux.insertCar( carMsg );
+        String carMongoId = carMsg.getMongoId();
+
+        carMsg = mDbAux.findCarByMongoId(carMongoId);
+
+        System.out.println("Car\n" + carMsg.toString());
 
 
     }

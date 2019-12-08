@@ -157,7 +157,7 @@ import com.google.gson.GsonBuilder;
             <xsl:apply-templates mode="addImports" select="./Imports"/>
 
             @SuppressWarnings({"WeakerAccess","unused","unchecked"})
-            public class <xsl:value-of select="@name"/> implements MessageInterface <xsl:if test="$mongoMsg = @name">, MessageMongoInterface</xsl:if>
+            public class <xsl:value-of select="@name"/> <xsl:if test="@extends"> extends <xsl:value-of select="@extends"/></xsl:if> implements MessageInterface <xsl:if test="$mongoMsg = @name">, MessageMongoInterface</xsl:if>
             {
             <xsl:apply-templates mode="declareAttributes" select="."/>
             <xsl:apply-templates mode="declareConstructors" select="."/>
@@ -174,11 +174,12 @@ import com.google.gson.GsonBuilder;
 
     <xsl:template mode="generateMongoDecoder" match="Message">
         public void decodeMongoDocument( Document pDoc ) {
+
             Document tDoc = null;
             List&lt;Document&gt; tDocLst = null;
-
-
             MongoDecoder tDecoder = new MongoDecoder( pDoc );
+
+            <xsl:if test="@extends">super.decodeMongoDocument( pDoc );</xsl:if>
 
             <xsl:if test="@db='true'">
             ObjectId _tId = pDoc.get("_id", ObjectId.class);
@@ -261,15 +262,22 @@ import com.google.gson.GsonBuilder;
     </xsl:template>
 
 
+
     <xsl:template mode="generateMongoEncoder" match="Message">
         public Document getMongoDocument() {
             MongoEncoder tEncoder = new MongoEncoder();
+            <xsl:if test="@extends">super.mongoEncode( tEncoder );</xsl:if>
+            mongoEncode( tEncoder );
+            return tEncoder.getDoc();
+        }
+
+     protected void mongoEncode(  MongoEncoder pEncoder ) {
         <xsl:for-each select="Attribute[not(@dbTransient='true')]">
            <xsl:if test="@constantGroup">
                <xsl:if test="not(@list)">
-                   tEncoder.add( "<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> ); </xsl:if>
+                   pEncoder.add( "<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> ); </xsl:if>
                <xsl:if test="@list">
-                   tEncoder.addConstArray("<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
+                   pEncoder.addConstArray("<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
            </xsl:if>
            <xsl:if test="not(@constantGroup)">
                <xsl:variable name="dataType" select="@type"/>
@@ -280,24 +288,23 @@ import com.google.gson.GsonBuilder;
            </xsl:if>
 
        </xsl:for-each>
-            return tEncoder.getDoc();
     }
     </xsl:template>
 
     <xsl:template mode="messageToMongoDoc" match="Attribute">
         <xsl:if test="not(@list)">
-            tEncoder.add("<xsl:value-of select="@name"/>",   m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
+            pEncoder.add("<xsl:value-of select="@name"/>",   m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
         <xsl:if test="@list">
-            tEncoder.addMessageArray("<xsl:value-of select="@name"/>",  m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
+            pEncoder.addMessageArray("<xsl:value-of select="@name"/>",  m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
     </xsl:template>
 
     <xsl:template mode="standardTypeToMongoDoc" match="Attribute">
             <xsl:variable name="dataType" select="@type"/>
             <xsl:if test="@list">
                 <xsl:variable name="encoder" select="$typeTable/Type[@name=$dataType]/@arrayEncoder"/>
-                tEncoder.<xsl:value-of select="$encoder"/>( "<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
+                pEncoder.<xsl:value-of select="$encoder"/>( "<xsl:value-of select="@name"/>", m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
             <xsl:if test="not(@list)">
-                tEncoder.add("<xsl:value-of select="@name"/>",  m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
+                pEncoder.add("<xsl:value-of select="@name"/>",  m<xsl:value-of select="extensions:upperFirst (@name)"/> );</xsl:if>
     </xsl:template>
 
 
@@ -329,9 +336,13 @@ import com.google.gson.GsonBuilder;
 
 
     <xsl:template mode="declareConstructors" match="Message">
-               public <xsl:value-of select="extensions:upperFirst (@name)"/>() {}
+               public <xsl:value-of select="extensions:upperFirst (@name)"/>()
+               {
+                <xsl:if test="@extends">super();</xsl:if>
+               }
 
                public <xsl:value-of select="extensions:upperFirst (@name)"/>(String pJsonString ) {
+                    <xsl:if test="@extends">super( pJsonString );</xsl:if>
                     JsonDecoder tDecoder = new JsonDecoder( pJsonString );
                     this.decode( tDecoder );
                }
@@ -628,6 +639,8 @@ import com.google.gson.GsonBuilder;
             JsonEncoder tEncoder = new JsonEncoder();
             pEncoder.add("<xsl:value-of select="@name"/>", tEncoder.toJson() );</xsl:if>
 
+        <xsl:if test="@extends">super.encode( tEncoder );</xsl:if>
+
         <xsl:for-each select="Attribute">
             //Encode Attribute: m<xsl:value-of select="extensions:upperFirst (@name)"/> Type: <xsl:value-of select="@type"/> List: <xsl:if test="@list">true</xsl:if><xsl:if test="not(@list)">false</xsl:if>
             <xsl:if test="@list">
@@ -648,6 +661,8 @@ import com.google.gson.GsonBuilder;
         <xsl:if test="@rootMessage='true'">
             JsonDecoder tDecoder = pDecoder.get("<xsl:value-of select="@name"/>");
         </xsl:if>
+        <xsl:if test="@extends">super.decode( tDecoder );</xsl:if>
+
         <xsl:for-each select="Attribute">
             //Decode Attribute: m<xsl:value-of select="extensions:upperFirst (@name)"/> Type:<xsl:value-of select="@type"/> List: <xsl:if test="@list">true</xsl:if><xsl:if test="not(@list)">false</xsl:if>
             <xsl:if test="@list">

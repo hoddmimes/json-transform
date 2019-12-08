@@ -15,5 +15,7 @@
 	<!-- Gnerates POJO objects with JSON support based upon the defintion found in the file -->
 	<!-- You may have multiple "MessageFile" entries -->
 	<MessageFile  file="./xml/TestMessage.xml" outPath="./java/main/generated/" package="generated"/>
+	<MessageFile  file="./xml/Vehicles.xml" outPath="./java/main/generated/" package="generated"/>
 </MessageFiles>
+
 

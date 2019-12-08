@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Messages mongoSupport="true">
 
+
 	<ConstantGroups prefix="Core">
 		<Group name="CG1">
 			<Constant id="X1"/>
@@ -16,12 +17,16 @@
 		</Group>
 	</ConstantGroups>
 
+
+
 	<Message name="TestSubMessage">
 		<Attribute name="intValue" type="int" mandatory="true" min="42" max="84"/>
 		<Attribute name="strValue" type="String"  pattern="foo[X-Z]+bar"/>
 		<Attribute name="stringArray" type="String" list="array"/>
 		<Attribute name="intArray" type="int" list="array"/>
 	</Message>
+
+
 
 	<Message name="TestMessage" rootMessage="true" db="true" dbCollection="Test">
 		<Attribute name="stringArray" type="String" list="linked"/>

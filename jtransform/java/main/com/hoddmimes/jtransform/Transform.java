@@ -419,13 +419,17 @@ public class Transform
                 if (tMsgsNodeList.item(i).getNodeType() == Node.ELEMENT_NODE) {
                     Element me = (Element)   tMsgsNodeList.item(i);
                     boolean tDbSupport = (me.hasAttribute("db")) ? Boolean.parseBoolean(me.getAttribute("db")) : false;
-                    tMsgs.put( me.getAttribute("name"), new DbMessage( me.getAttribute("name"), me, tDbSupport));
+                    String tMessageName = me.getAttribute("name");
+                    String tExtendMessageName =  (me.hasAttribute("db")) ? me.getAttribute("extends") : null;
+
+                    tMsgs.put( tMessageName, new DbMessage( tMessageName, tExtendMessageName, me, tDbSupport));
                 }
             }
             // Traverse all messages to see what messages require db support
             for( DbMessage dm : tMsgs.values()) {
                if (dm.mDbSupport) {
                   checkDbSupportForChildren( dm, tMsgs );
+                  checkDbSupportForExtentions( dm, tMsgs );
                }
             }
 
@@ -434,11 +438,22 @@ public class Transform
             for( DbMessage dm : tMsgs.values()) {
                 if (dm.mDbSupport) {
                     tNameList.put( dm.mMessageName, dm.mMessageName);
+                    System.out.println("DB supported message: " +  dm.mMessageName);
                 }
             }
             return tNameList;
         }
     }
+
+    static private void checkDbSupportForExtentions( DbMessage pDbMsg, HashMap<String, DbMessage> pDbMsgs) {
+        if ((pDbMsg.mDbSupport) && (pDbMsg.mExtensionMessageName != null)) {
+            DbMessage tExtendMsg = (DbMessage) pDbMsgs.get(pDbMsg.mExtensionMessageName );
+            if (tExtendMsg != null) {
+                tExtendMsg.mDbSupport = true;
+            }
+        }
+    }
+
 
     static private void checkDbSupportForChildren( DbMessage pDbMsg, HashMap<String, DbMessage> pDbMsgs) {
         NodeList tAttrList = pDbMsg.mMsgElement.getElementsByTagName("Attribute");
@@ -592,11 +607,13 @@ public class Transform
         String      mMessageName;
         boolean     mDbSupport;
         Element     mMsgElement;
+        String      mExtensionMessageName;
 
-        DbMessage( String pMsgName, Element pMsgElement, boolean pDbSupport  ) {
+        DbMessage( String pMsgName, String pExtentionMsgName, Element pMsgElement, boolean pDbSupport  ) {
             mDbSupport = pDbSupport;
             mMessageName = pMsgName;
             mMsgElement = pMsgElement;
+            mExtensionMessageName = pExtentionMsgName;
         }
     }
 

@@ -45,13 +45,33 @@ public class TestEncodeDecode {
         int x = testMsg.getIntValue().get();
         List<Integer> iarr = testMsg.getIntArray().get();
 
-
-
         // Just and other itteration of the encoding of the test messahe
         tEncoder = new JsonEncoder();
         xtm.encode( tEncoder );
 
         System.out.println(tJsonPrinter.toJson( tEncoder.toJson()));
+
+        // Test Car and extentions
+
+        Car carMsg = CreateTestMessage.createRandomCarMessage();
+        System.out.println( carMsg.toString());
+        // Create an Enoder and encode the created test message instance
+        tEncoder = new JsonEncoder();
+        carMsg.encode( tEncoder );
+
+        // Print the encoded (Json) message
+        tJsonPrinter = new GsonBuilder().setPrettyPrinting().create();
+        System.out.println(tJsonPrinter.toJson( tEncoder.toJson()));
+
+        // Create a decoder from a JSON string
+        String carMsgAsJsonString = tEncoder.toJson().toString();
+        tDecoder = new JsonDecoder( carMsgAsJsonString );
+
+        // Create a new instance of a TestMessage from a Json string
+        carMsg = new Car();
+        carMsg.decode( tDecoder );
+
+        System.out.println( carMsg.toJson());
     }
 
 
