@@ -1,8 +1,7 @@
+package generated;
 
-                    package generated;
+public enum Type {
+    Car, Truck, Motorbike;
 
-                    public enum Type {
-                    Car,Truck,Motorbike;
-                    
-                    }
+}
                 

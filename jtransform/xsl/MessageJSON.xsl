@@ -151,13 +151,13 @@ import com.google.gson.JsonObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-            <xsl:variable name="mongoMsg" select="java:get($dbMsgs,string(@name))"/>
+
 
             <xsl:apply-templates mode="addImports" select="../Imports"/>
             <xsl:apply-templates mode="addImports" select="./Imports"/>
 
             @SuppressWarnings({"WeakerAccess","unused","unchecked"})
-            public class <xsl:value-of select="@name"/> <xsl:if test="@extends"> extends <xsl:value-of select="@extends"/></xsl:if> implements MessageInterface <xsl:if test="$mongoMsg = @name">, MessageMongoInterface</xsl:if>
+            public class <xsl:value-of select="@name"/> <xsl:if test="@extends"> extends <xsl:value-of select="@extends"/></xsl:if> implements MessageInterface <xsl:call-template name="declareInterfaces"/>
             {
             <xsl:apply-templates mode="declareAttributes" select="."/>
             <xsl:apply-templates mode="declareConstructors" select="."/>
@@ -171,6 +171,12 @@ import com.google.gson.GsonBuilder;
     </xsl:template>
 
 
+    <xsl:template name="declareInterfaces">
+        <xsl:variable name="mongoMsg" select="java:get($dbMsgs,string(@name))"/>
+        <xsl:if test="$mongoMsg = @name">, MessageMongoInterface</xsl:if>
+        <xsl:if test="@implements">, <xsl:value-of select="@implements"/></xsl:if>
+        <xsl:for-each select="Interfaces/Interface">, <xsl:value-of select="@name"/></xsl:for-each>
+    </xsl:template>
 
     <xsl:template mode="generateMongoDecoder" match="Message">
         public void decodeMongoDocument( Document pDoc ) {

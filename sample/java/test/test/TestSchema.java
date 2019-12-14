@@ -1,10 +1,5 @@
 package test;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.hoddmimes.jsontransform.JsonDecoder;
-import com.hoddmimes.jsontransform.JsonEncoder;
 import com.hoddmimes.jsontransform.JsonSchemaValidator;
 import generated.TestMessage;
 

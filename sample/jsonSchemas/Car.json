@@ -1,0 +1,20 @@
+
+ {
+   "$schema": "http://json-schema.org/draft-06/schema#",
+   "title": "Car",
+   "type": "object",
+     "properties" : { 
+     "Car" : {
+       "type" : "object",
+       "properties" : { 
+          "color" : { "type" : "string" },
+          "airbags" : { "type" : "boolean" },
+          "seats" : { "type" : "integer" },
+          "manufactor" : { "type" : "string" },
+          "productionYear" : { "type" : "integer" }
+     }
+    }
+   },
+   "required" : ["Car"]
+}
+                
