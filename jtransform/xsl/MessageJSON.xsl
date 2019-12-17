@@ -165,6 +165,7 @@ import com.google.gson.GsonBuilder;
             <xsl:apply-templates mode="declareMessageIfMethods" select="."/>
             <xsl:apply-templates mode="generateMongoSupport" select="."/>
             <xsl:apply-templates mode="applyCode" select="."/>
+            <xsl:apply-templates mode="generateBuilder" select="."/>
             }
             <xsl:apply-templates mode="addSomeDoc" select="."/>
         </redirect:write>
@@ -210,6 +211,72 @@ import com.google.gson.GsonBuilder;
         </xsl:for-each>
         } // End decodeMongoDocument
     </xsl:template>
+
+    <xsl:template mode="generateBuilder" match="Message">
+
+        public static  Builder get<xsl:value-of select="@name"/>Builder() {
+            return new <xsl:value-of select="@name"/>.Builder();
+        }
+
+
+        public static class  Builder {
+          private <xsl:value-of select="@name"/> mInstance;
+
+          private Builder () {
+            mInstance = new <xsl:value-of select="@name"/>();
+          }
+
+        <xsl:apply-templates mode="generateBuildSetMethods" select="."/>
+        <xsl:if test="@extends">
+            <xsl:variable name="subclass" select="@extends"/>
+            <xsl:apply-templates mode="generateBuildSetMethods" select="../Message[@name=$subclass]"/>
+        </xsl:if>
+
+        public <xsl:value-of select="@name"/> build() {
+            return mInstance;
+        }
+
+        }
+    </xsl:template>
+
+    <xsl:template mode="frotz" match="Message">
+        <xsl:message>FROTZ: <xsl:value-of select="@name"/> </xsl:message>
+    </xsl:template>
+
+
+    <xsl:template mode="generateBuildSetMethods" match="Message">
+        <xsl:for-each select="Attribute">
+            <xsl:if test="@constantGroup">
+                public Builder set<xsl:value-of select="extensions:upperFirst (@name)"/>( <xsl:if test="@list">List&lt;<xsl:value-of select="@constantGroup"/>&gt;</xsl:if><xsl:if test="not(@list)"> <xsl:value-of select="@constantGroup"/></xsl:if> pValue ) {
+                    mInstance.set<xsl:value-of select="extensions:upperFirst (@name)"/>( pValue );
+                    return this;
+                }
+            </xsl:if>
+            <xsl:if test="not(@constantGroup)">
+                <xsl:variable name="dataType" select="@type"/>
+                <xsl:if test="$typeTable/Type[@name=$dataType]">
+                    <xsl:if test="@list">
+                        <xsl:variable name="dType" select="$typeTable/Type[@name=$dataType]/@type"/>
+                        public Builder set<xsl:value-of select="extensions:upperFirst (@name)"/>( List&lt;<xsl:value-of select="$dType"/>&gt; pValue ) {</xsl:if>
+                    <xsl:if test="not(@list)">
+                        public Builder set<xsl:value-of select="extensions:upperFirst (@name)"/>( <xsl:value-of select="$dataType"/> pValue ) {</xsl:if>
+                        mInstance.set<xsl:value-of select="extensions:upperFirst (@name)"/>( pValue );
+                        return this;
+                    }
+                </xsl:if>
+                <xsl:if test="not($typeTable/Type[@name=$dataType])">
+                    public Builder set<xsl:value-of select="extensions:upperFirst (@name)"/>( <xsl:if test="@list">List&lt;<xsl:value-of select="@type"/>&gt;</xsl:if> <xsl:if test="not(@list)"> <xsl:value-of select="@type"/></xsl:if> pValue )  {
+                        mInstance.set<xsl:value-of select="extensions:upperFirst (@name)"/>( pValue );
+                        return this;
+                    }
+                </xsl:if>
+            </xsl:if>
+          </xsl:for-each>
+    </xsl:template>
+
+
+
+
 
 
     <xsl:template mode="standardTypeFromMongoDoc" match="Attribute">
