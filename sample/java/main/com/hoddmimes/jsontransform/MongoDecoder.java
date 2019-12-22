@@ -2,6 +2,8 @@ package com.hoddmimes.jsontransform;
 
 import org.bson.Document;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,6 +21,7 @@ public class MongoDecoder
      *
      * ===========================================================================================================
      */
+
 
     public Boolean readBoolean(String pAttribute ) {
         return mDoc.getBoolean( pAttribute );
@@ -38,6 +41,14 @@ public class MongoDecoder
             return null;
         }
         return x.shortValue();
+    }
+
+    public Date readDate( String pAttribute ) {
+        String x = mDoc.getString( pAttribute );
+        if (x == null) {
+            return null;
+        }
+        return DateUtils.stringToDate( x );
     }
 
     public Integer readInteger( String pAttribute ) {
@@ -96,6 +107,11 @@ public class MongoDecoder
     public List<byte[]> readByteArray( String pAttribute, String pListType) {
         List<String> tStrLst = (List<String>) mDoc.get( pAttribute );
         return stringsToByteArrays( tStrLst, pListType );
+    }
+
+    public List<Date> readDateArray( String pAttribute, String pListType) {
+        List<String> tStrLst = (List<String>) mDoc.get( pAttribute );
+        return stringsToDateArray( tStrLst, pListType );
     }
 
     public List<Short> readShortArray( String pAttribute, String pListType) {
@@ -161,6 +177,17 @@ public class MongoDecoder
             return null;
         }
         return Base64.getDecoder().decode( pStr );
+    }
+
+    private List<Date> stringsToDateArray( List<String> pDateStrArray, String pListType ) {
+        if (pDateStrArray == null) {
+            return null;
+        }
+        List<Date> tDateArr = new ArrayList<>();
+        for( String tStr: pDateStrArray ) {
+            tDateArr.add( DateUtils.stringToDate( tStr ));
+        }
+        return ListFactory.convertList(tDateArr, pListType);
     }
 
     private List<byte[]> stringsToByteArrays(List<String> pStrLst, String pListType ) {

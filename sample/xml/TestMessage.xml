@@ -34,6 +34,7 @@
 		<Attribute name="constArray" constantGroup="CG2" list="array"/>
 		<Attribute name="boolValue" type="boolean"/>
 		<Attribute name="charValue" type="char"/>
+		<Attribute name="dateValue" type="Date"/>
 		<Attribute name="byteValue" type="byte"/>
 		<Attribute name="doubleValue" type="double"/>
 		<Attribute name="shortValue" type="short" mandatory="true" min="0" max="100" multiplieOf="3" />

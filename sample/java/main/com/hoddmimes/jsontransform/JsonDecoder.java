@@ -4,9 +4,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
-import java.util.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Date;
+import java.util.List;
 
-import static java.lang.Enum.*;
+import static java.lang.Enum.valueOf;
 
 @SuppressWarnings({"WeakerAccess","unused"})
 public class JsonDecoder
@@ -29,6 +34,26 @@ public class JsonDecoder
         }
         JsonObject tJsonObj = mDecoder.get( pAttribute ).getAsJsonObject();
         return new JsonDecoder( tJsonObj );
+    }
+
+
+    public Date readDate(String pAttribute) {
+        if (mDecoder.get(pAttribute) == null) {
+            return null;
+        }
+        return DateUtils.stringToDate( mDecoder.get(pAttribute).getAsString());
+    }
+
+    public List<Date> readDateArray(String pAttribute, String pListType) {
+        if (mDecoder.get(pAttribute) == null) {
+            return null;
+        }
+        JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
+        List<Date> tList =  ListFactory.getList( pListType );
+        for (int i = 0; i < tArr.size(); i++) {
+            tList.add( DateUtils.stringToDate( mDecoder.get(pAttribute).getAsString()));
+        }
+        return tList;
     }
 
     public Boolean readBoolean(String pAttribute) {

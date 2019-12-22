@@ -30,6 +30,7 @@
             <Type name="long" type="Long" arrayEncoder="addLongArray" arrayDecoder="readLongArray" decoder="readLong" />
             <Type name="double" type="Double" arrayEncoder="addDoubleArray" arrayDecoder="readDoubleArray" decoder="readDouble" />
             <Type name="String" type="String" arrayEncoder="addStringArray" arrayDecoder="readStringArray" decoder="readString" />
+            <Type name="Date" type="Date" arrayEncoder="addDateArray" arrayDecoder="readDateArray" decoder="readDate" />
             <Type name="byte[]" type="byte[]" arrayEncoder="addByteVectorArray" arrayDecoder="readByteVectorArray" decoder="readByteVector"/>
         </DataTypes>
     </xsl:variable>
@@ -124,6 +125,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.List;
+import java.util.Date;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalDouble;

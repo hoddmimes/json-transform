@@ -2,8 +2,10 @@ package com.hoddmimes.jsontransform;
 
 import org.bson.Document;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,14 @@ public class MongoEncoder
      *
      * ==========================================================================================
      */
+
+
+    public void add( String pAttribute, Date pValue ) {
+        if (pValue == null) {
+            return;
+        }
+        mDoc.append( pAttribute, DateUtils.dateToString( pValue ));
+    }
 
     public void add( String pAttribute, Boolean pValue ) {
         mDoc.append( pAttribute, pValue);
@@ -115,6 +125,10 @@ public class MongoEncoder
         mDoc.append( pAttribute, byteArraysToStrings( pList));
     }
 
+    public void addDateArray( String pAttribute, List<Date> pList ) {
+        mDoc.append( pAttribute, dateArrayToStrings( pList));
+    }
+
     public void addConstArray( String pAttribute, List<?> pConstArray ) {
         mDoc.append( pAttribute, constsToStrings(  pConstArray ));
     }
@@ -158,6 +172,14 @@ public class MongoEncoder
             tStrArr.add( Base64.getEncoder().encodeToString( ba ));
         }
         return tStrArr;
+    }
+
+    private List<String> dateArrayToStrings( List<Date> pDateArray ) {
+        List<String> tDateStrArr = new ArrayList<>();
+        for( Date d : pDateArray) {
+            tDateStrArr.add( DateUtils.dateToString( d ));
+        }
+        return tDateStrArr;
     }
 
     private String constToString(Enum<?> pConst) {

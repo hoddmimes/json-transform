@@ -5,7 +5,7 @@ import generated.*;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
@@ -97,6 +97,7 @@ public class CreateTestMessage
         testMsg.setConstValue(CG1.X1);
         testMsg.setIntArray(createIntegerArray(cRand.nextInt(5) + 1, new Integer(101)));
         testMsg.setIntValue(102);
+        testMsg.setDateValue( new Date());
         testMsg.setLongValue(1010101010101L);
         testMsg.setMsgArray(createMsgArray(5));
         testMsg.setMsgValue(createSubMessage());
