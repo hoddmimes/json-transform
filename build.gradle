@@ -109,7 +109,7 @@ project(':sample') {
         version = '1.0'
         destinationDir = file("../")
         
-        from('out/production/classes') {
+        from('build/classes/java/main/') {
             include '**/jsontransform/*.class'
         }
     }
