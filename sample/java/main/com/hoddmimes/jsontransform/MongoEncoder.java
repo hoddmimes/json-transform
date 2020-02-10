@@ -2,7 +2,7 @@ package com.hoddmimes.jsontransform;
 
 import org.bson.Document;
 
-import java.text.SimpleDateFormat;
+
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -33,7 +33,7 @@ public class MongoEncoder
         if (pValue == null) {
             return;
         }
-        mDoc.append( pAttribute, DateUtils.dateToString( pValue ));
+        mDoc.append( pAttribute, pValue);
     }
 
     public void add( String pAttribute, Boolean pValue ) {
@@ -126,7 +126,7 @@ public class MongoEncoder
     }
 
     public void addDateArray( String pAttribute, List<Date> pList ) {
-        mDoc.append( pAttribute, dateArrayToStrings( pList));
+        mDoc.append( pAttribute, pList);
     }
 
     public void addConstArray( String pAttribute, List<?> pConstArray ) {
@@ -174,13 +174,6 @@ public class MongoEncoder
         return tStrArr;
     }
 
-    private List<String> dateArrayToStrings( List<Date> pDateArray ) {
-        List<String> tDateStrArr = new ArrayList<>();
-        for( Date d : pDateArray) {
-            tDateStrArr.add( DateUtils.dateToString( d ));
-        }
-        return tDateStrArr;
-    }
 
     private String constToString(Enum<?> pConst) {
         if (pConst == null) {
