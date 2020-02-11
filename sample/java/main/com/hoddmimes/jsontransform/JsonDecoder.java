@@ -8,7 +8,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Base64;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import static java.lang.Enum.valueOf;
@@ -37,21 +38,40 @@ public class JsonDecoder
     }
 
 
-    public Date readDate(String pAttribute) {
+    public LocalDate readDate(String pAttribute) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
-        return DateUtils.stringToDate( mDecoder.get(pAttribute).getAsString());
+        return DateUtils.stringToLocalDate( mDecoder.get(pAttribute).getAsString());
     }
 
-    public List<Date> readDateArray(String pAttribute, String pListType) {
+    public LocalDateTime readDateTime(String pAttribute) {
+        if (mDecoder.get(pAttribute) == null) {
+            return null;
+        }
+        return DateUtils.stringToLocalDateTime( mDecoder.get(pAttribute).getAsString());
+    }
+
+    public List<LocalDate> readDateArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
         }
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
-        List<Date> tList =  ListFactory.getList( pListType );
+        List<LocalDate> tList =  ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
-            tList.add( DateUtils.stringToDate( mDecoder.get(pAttribute).getAsString()));
+            tList.add( DateUtils.stringToLocalDate( mDecoder.get(pAttribute).getAsString()));
+        }
+        return tList;
+    }
+
+    public List<LocalDateTime> readDateTimeArray(String pAttribute, String pListType) {
+        if (mDecoder.get(pAttribute) == null) {
+            return null;
+        }
+        JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
+        List<LocalDateTime> tList =  ListFactory.getList( pListType );
+        for (int i = 0; i < tArr.size(); i++) {
+            tList.add( DateUtils.stringToLocalDateTime( mDecoder.get(pAttribute).getAsString()));
         }
         return tList;
     }

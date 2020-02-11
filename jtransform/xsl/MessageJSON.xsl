@@ -30,7 +30,8 @@
             <Type name="long" type="Long" arrayEncoder="addLongArray" arrayDecoder="readLongArray" decoder="readLong" />
             <Type name="double" type="Double" arrayEncoder="addDoubleArray" arrayDecoder="readDoubleArray" decoder="readDouble" />
             <Type name="String" type="String" arrayEncoder="addStringArray" arrayDecoder="readStringArray" decoder="readString" />
-            <Type name="Date" type="Date" arrayEncoder="addDateArray" arrayDecoder="readDateArray" decoder="readDate" />
+            <Type name="Date" type="LocalDate" arrayEncoder="addDateArray" arrayDecoder="readDateArray" decoder="readDate" />
+            <Type name="DateTime" type="LocalDateTime" arrayEncoder="addDateTimeArray" arrayDecoder="readDateTimeArray" decoder="readDateTime" />
             <Type name="byte[]" type="byte[]" arrayEncoder="addByteVectorArray" arrayDecoder="readByteVectorArray" decoder="readByteVector"/>
         </DataTypes>
     </xsl:variable>
@@ -125,7 +126,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.List;
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.OptionalInt;
 import java.util.OptionalDouble;
@@ -257,11 +259,11 @@ import com.google.gson.GsonBuilder;
             <xsl:if test="not(@constantGroup)">
                 <xsl:variable name="dataType" select="@type"/>
                 <xsl:if test="$typeTable/Type[@name=$dataType]">
+                    <xsl:variable name="dType" select="$typeTable/Type[@name=$dataType]/@type"/>
                     <xsl:if test="@list">
-                        <xsl:variable name="dType" select="$typeTable/Type[@name=$dataType]/@type"/>
                         public Builder set<xsl:value-of select="extensions:upperFirst (@name)"/>( List&lt;<xsl:value-of select="$dType"/>&gt; pValue ) {</xsl:if>
                     <xsl:if test="not(@list)">
-                        public Builder set<xsl:value-of select="extensions:upperFirst (@name)"/>( <xsl:value-of select="$dataType"/> pValue ) {</xsl:if>
+                        public Builder set<xsl:value-of select="extensions:upperFirst (@name)"/>( <xsl:value-of select="$dType"/> pValue ) {</xsl:if>
                         mInstance.set<xsl:value-of select="extensions:upperFirst (@name)"/>( pValue );
                         return this;
                     }

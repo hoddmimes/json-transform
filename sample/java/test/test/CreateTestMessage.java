@@ -4,6 +4,7 @@ package test;
 import generated.*;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -97,7 +98,7 @@ public class CreateTestMessage
         testMsg.setConstValue(CG1.X1);
         testMsg.setIntArray(createIntegerArray(cRand.nextInt(5) + 1, new Integer(101)));
         testMsg.setIntValue(102);
-        testMsg.setDateValue( new Date());
+        testMsg.setDateValue(LocalDate.now());
         testMsg.setLongValue(1010101010101L);
         testMsg.setMsgArray(createMsgArray(5));
         testMsg.setMsgValue(createSubMessage());

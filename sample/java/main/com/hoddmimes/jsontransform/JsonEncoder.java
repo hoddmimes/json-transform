@@ -3,13 +3,12 @@ package com.hoddmimes.jsontransform;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Base64;
 import org.bson.Document;
 
-import java.util.Date;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 @SuppressWarnings({"WeakerAccess","unused"})
@@ -38,12 +37,20 @@ public class JsonEncoder
         mEncoder.addProperty(pAttribute, pValue);
     }
 
-    public void add( String pAttribute, Date pValue ) {
+    public void add( String pAttribute, LocalDate pValue ) {
         if (pValue == null) {
             return;
         }
 
-        mEncoder.addProperty(pAttribute, DateUtils.dateToString( pValue ));
+        mEncoder.addProperty(pAttribute, DateUtils.localDateToString( pValue ));
+    }
+
+    public void add( String pAttribute, LocalDateTime pValue ) {
+        if (pValue == null) {
+            return;
+        }
+
+        mEncoder.addProperty(pAttribute, DateUtils.localDateTimeToString( pValue ));
     }
 
     public void add( String pAttribute, Boolean pValue ) {
@@ -111,17 +118,27 @@ public class JsonEncoder
         mEncoder.add(pAttribute, tEnc.toJson() );
     }
 
-    public void addDateArray(  String pAttribute, List<Date> pValue ) {
+    public void addDateArray(String pAttribute, List<LocalDate> pValue) {
         if (pValue == null) {
             return;
         }
         JsonArray tArr = new JsonArray();
-        for (Date d : pValue) {
-            tArr.add( DateUtils.dateToString( d ));
+        for (LocalDate d : pValue) {
+            tArr.add(DateUtils.localDateToString(d));
+        }
+        mEncoder.add(pAttribute, tArr);
+    }
+
+    public void addDateTimeArray(  String pAttribute, List<LocalDateTime> pValue ) {
+        if (pValue == null) {
+            return;
+        }
+        JsonArray tArr = new JsonArray();
+        for (LocalDateTime d : pValue) {
+            tArr.add( DateUtils.localDateTimeToString( d ));
         }
         mEncoder.add( pAttribute, tArr);
     }
-
     public void addByteArray(  String pAttribute, List<Byte> pValue ) {
         if (pValue == null) {
             return;

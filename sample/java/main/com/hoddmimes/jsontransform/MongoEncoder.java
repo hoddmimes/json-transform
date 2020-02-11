@@ -3,6 +3,8 @@ package com.hoddmimes.jsontransform;
 import org.bson.Document;
 
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.Date;
@@ -29,11 +31,18 @@ public class MongoEncoder
      */
 
 
-    public void add( String pAttribute, Date pValue ) {
+    public void add( String pAttribute, LocalDate pValue ) {
         if (pValue == null) {
             return;
         }
-        mDoc.append( pAttribute, pValue);
+        mDoc.append( pAttribute, DateUtils.localDateToDate(pValue));
+    }
+
+    public void add( String pAttribute, LocalDateTime pValue ) {
+        if (pValue == null) {
+            return;
+        }
+        mDoc.append( pAttribute, DateUtils.localDateTimeToDate(pValue));
     }
 
     public void add( String pAttribute, Boolean pValue ) {
@@ -125,8 +134,22 @@ public class MongoEncoder
         mDoc.append( pAttribute, byteArraysToStrings( pList));
     }
 
-    public void addDateArray( String pAttribute, List<Date> pList ) {
-        mDoc.append( pAttribute, pList);
+    public void addDateArray( String pAttribute, List<LocalDate> pList ) {
+        if (pList == null) {
+            return;
+        }
+        ArrayList<Date> tDateLst = new ArrayList<>();
+        pList.forEach( ld -> tDateLst.add( DateUtils.localDateToDate( ld )));
+        mDoc.append( pAttribute, tDateLst);
+    }
+
+    public void addDateTimeArray( String pAttribute, List<LocalDateTime> pList ) {
+        if (pList == null) {
+            return;
+        }
+        ArrayList<Date> tDateLst = new ArrayList<>();
+        pList.forEach( ldt -> tDateLst.add( DateUtils.localDateTimeToDate( ldt )));
+        mDoc.append( pAttribute, tDateLst);
     }
 
     public void addConstArray( String pAttribute, List<?> pConstArray ) {

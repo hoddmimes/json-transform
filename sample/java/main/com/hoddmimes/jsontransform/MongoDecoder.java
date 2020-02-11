@@ -4,6 +4,8 @@ import org.bson.Document;
 
 
 import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 
 public class MongoDecoder
@@ -42,8 +44,14 @@ public class MongoDecoder
         return x.shortValue();
     }
 
-    public Date readDate( String pAttribute ) {
-        return mDoc.getDate( pAttribute );
+    public LocalDateTime readDateTime( String pAttribute ) {
+        Date tDate = mDoc.getDate( pAttribute );
+        return DateUtils.dateToLocalDateTime( tDate );
+    }
+
+    public LocalDate readDate( String pAttribute ) {
+        Date tDate = mDoc.getDate( pAttribute );
+        return DateUtils.dateToLocalDate( tDate );
     }
 
     public Integer readInteger( String pAttribute ) {
@@ -104,9 +112,18 @@ public class MongoDecoder
         return stringsToByteArrays( tStrLst, pListType );
     }
 
-    public List<Date> readDateArray( String pAttribute, String pListType) {
+    public List<LocalDate> readDateArray( String pAttribute, String pListType) {
         List<Date> tRetLst = (List<Date>) mDoc.get( pAttribute );
-        return ListFactory.convertList(tRetLst, pListType);
+        ArrayList<LocalDate> tLocalDateList = new ArrayList<>();
+        tRetLst.forEach( d -> tLocalDateList.add( DateUtils.dateToLocalDate(d)));
+        return ListFactory.convertList(tLocalDateList, pListType);
+    }
+
+    public List<LocalDateTime> readDateTimeArray( String pAttribute, String pListType) {
+        List<Date> tRetLst = (List<Date>) mDoc.get( pAttribute );
+        ArrayList<LocalDateTime> tLocalDateTimeList = new ArrayList<>();
+        tRetLst.forEach( d -> tLocalDateTimeList.add( DateUtils.dateToLocalDateTime(d)));
+        return ListFactory.convertList(tLocalDateTimeList, pListType);
     }
 
     public List<Short> readShortArray( String pAttribute, String pListType) {
