@@ -32,7 +32,6 @@
             <Type name="String" type="String" arrayEncoder="addStringArray" arrayDecoder="readStringArray" decoder="readString" />
             <Type name="LocalDate" type="LocalDate" arrayEncoder="addDateArray" arrayDecoder="readDateArray" decoder="readDate" />
             <Type name="LocalDateTime" type="LocalDateTime" arrayEncoder="addDateTimeArray" arrayDecoder="readDateTimeArray" decoder="readDateTime" />
-            <Type name="DateTime" type="LocalDateTime" arrayEncoder="addDateTimeArray" arrayDecoder="readDateTimeArray" decoder="readDateTime" />
             <Type name="byte[]" type="byte[]" arrayEncoder="addByteVectorArray" arrayDecoder="readByteVectorArray" decoder="readByteVector"/>
         </DataTypes>
     </xsl:variable>

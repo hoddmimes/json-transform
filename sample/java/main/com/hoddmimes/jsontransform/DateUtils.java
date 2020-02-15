@@ -55,7 +55,8 @@ public class DateUtils
      * String to LocalDate / LocalDateTime and vice versa
      */
      public static LocalDate stringToLocalDate( String pDateString ) {
-         return LocalDate.parse( pDateString, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+
+         return LocalDate.parse( pDateString.substring(0,"yyyy-MM-dd".length()), DateTimeFormatter.ofPattern("yyyy-MM-dd"));
      }
 
     public static LocalDateTime stringToLocalDateTime( String pDateString ) {
