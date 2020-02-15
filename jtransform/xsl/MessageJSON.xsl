@@ -30,7 +30,8 @@
             <Type name="long" type="Long" arrayEncoder="addLongArray" arrayDecoder="readLongArray" decoder="readLong" />
             <Type name="double" type="Double" arrayEncoder="addDoubleArray" arrayDecoder="readDoubleArray" decoder="readDouble" />
             <Type name="String" type="String" arrayEncoder="addStringArray" arrayDecoder="readStringArray" decoder="readString" />
-            <Type name="Date" type="LocalDate" arrayEncoder="addDateArray" arrayDecoder="readDateArray" decoder="readDate" />
+            <Type name="LocalDate" type="LocalDate" arrayEncoder="addDateArray" arrayDecoder="readDateArray" decoder="readDate" />
+            <Type name="LocalDateTime" type="LocalDateTime" arrayEncoder="addDateTimeArray" arrayDecoder="readDateTimeArray" decoder="readDateTime" />
             <Type name="DateTime" type="LocalDateTime" arrayEncoder="addDateTimeArray" arrayDecoder="readDateTimeArray" decoder="readDateTime" />
             <Type name="byte[]" type="byte[]" arrayEncoder="addByteVectorArray" arrayDecoder="readByteVectorArray" decoder="readByteVector"/>
         </DataTypes>

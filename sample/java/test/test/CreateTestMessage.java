@@ -75,18 +75,7 @@ public class CreateTestMessage
         return tList;
     }
 
-    public static Car createRandomCarMessage() {
-        String colors[] = {"Red","Blue","Black","Yellow","Gren","Gray","Orange"};
-        Car c = new Car();
-        c.setAirbags( cRand.nextBoolean());
-        c.setColor( colors[ cRand.nextInt( colors.length - 1)]);
-        c.setProductionYear( 2000 + cRand.nextInt( 20));
-        c.setSeats( (cRand.nextBoolean() ? 2 : 4));
-        c.setInsurensNumber("XY" + cRand.nextInt( Integer.MAX_VALUE));
-        c.setType( Type.Car );
-        c.setWheels( 4 );
-        return c;
-    }
+
 
     public static TestMessage createRandomTestMessage() {
         TestMessage testMsg = new TestMessage();

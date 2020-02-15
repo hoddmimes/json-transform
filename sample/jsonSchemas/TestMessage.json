@@ -12,7 +12,7 @@
           "constArray" : { "type" : "string", "enum" : ["Y1", "Y2", "Y3"] }, 
           "boolValue" : { "type" : "boolean" },
           "charValue" : { "type" : "integer" },
-          "dateValue" : { "$ref" : "file:./sample/jsonSchemas/Date.json" },
+          "dateValue" : { "$ref" : "file:./sample/jsonSchemas/LocalDate.json" },
           "byteValue" : { "type" : "integer" },
           "doubleValue" : { "type" : "number" },
           "shortValue" : { "minimum": 0, "maximum": 100, "multiplieOf": 3, "type" : "integer" },

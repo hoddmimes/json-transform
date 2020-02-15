@@ -35,14 +35,15 @@ public class MongoEncoder
         if (pValue == null) {
             return;
         }
-        mDoc.append( pAttribute, DateUtils.localDateToDate(pValue));
+        mDoc.append( pAttribute, DateUtils.localDateToString(pValue));
     }
 
     public void add( String pAttribute, LocalDateTime pValue ) {
         if (pValue == null) {
             return;
         }
-        mDoc.append( pAttribute, DateUtils.localDateTimeToDate(pValue));
+
+        mDoc.append( pAttribute, DateUtils.localDateTimeToString(pValue));
     }
 
     public void add( String pAttribute, Boolean pValue ) {
@@ -138,8 +139,8 @@ public class MongoEncoder
         if (pList == null) {
             return;
         }
-        ArrayList<Date> tDateLst = new ArrayList<>();
-        pList.forEach( ld -> tDateLst.add( DateUtils.localDateToDate( ld )));
+        ArrayList<String> tDateLst = new ArrayList<>();
+        pList.forEach( ld -> tDateLst.add( DateUtils.localDateToString( ld )));
         mDoc.append( pAttribute, tDateLst);
     }
 
@@ -147,8 +148,8 @@ public class MongoEncoder
         if (pList == null) {
             return;
         }
-        ArrayList<Date> tDateLst = new ArrayList<>();
-        pList.forEach( ldt -> tDateLst.add( DateUtils.localDateTimeToDate( ldt )));
+        ArrayList<String> tDateLst = new ArrayList<>();
+        pList.forEach( ldt -> tDateLst.add( DateUtils.localDateTimeToString( ldt )));
         mDoc.append( pAttribute, tDateLst);
     }
 

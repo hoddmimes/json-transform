@@ -1,13 +1,14 @@
 package com.hoddmimes.jsontransform;
 
+import org.junit.Test;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class DateUtils
 {
@@ -39,7 +40,17 @@ public class DateUtils
         return java.util.Date.from(pDate.atZone(ZoneId.systemDefault()).toInstant());
     }
 
+    public static LocalDate utcDateToLocalDate( Date pDate )  {
+        return Instant.ofEpochMilli(pDate.getTime())
+                .atZone(ZoneOffset.UTC)
+                .toLocalDate();
+    }
 
+    public static LocalDateTime utcDateToLocalDateTime( Date pDate )  {
+        return Instant.ofEpochMilli(pDate.getTime())
+                .atZone(ZoneOffset.UTC)
+                .toLocalDateTime();
+    }
     /**
      * String to LocalDate / LocalDateTime and vice versa
      */
@@ -119,12 +130,29 @@ public class DateUtils
         return justTime( tDateStr );
     }
 
-/*
-    public static void main( String args[] ) {
-        Date d =stringToDate("2019-12-22 00");
-        System.out.println( "Date: " + d );
-        System.out.println( "Date: " + DateUtils.justDate("2019-12-22 14:32:12"));
-        System.out.println( "Date: " + DateUtils.justTime("2019-12-22 14:32:12:123"));
+    /*
+
+    @Test
+    public void test()
+    {
+      LocalDate ld = stringToLocalDate("2020-01-02");
+      LocalDateTime ldt = stringToLocalDateTime("2020-01-02 01:02:03.456");
+
+      Date d = localDateToDate( ld );
+      Date dt = localDateTimeToDate( ldt );
+
+      System.out.println("[Date: " + justDate( d ) + " DateTime: " + dateToString( dt ) + " ]");
+
+        LocalDate cld = dateToLocalDate( d );
+        LocalDateTime cldt = dateToLocalDateTime( dt );
+        System.out.println("[LocalDate: " + localDateToString( cld ) + " DateTime: " + localDateTimeToString( cldt ) + " ]");
+
     }
-*/
+
+
+    public static void main( String args[] ) {
+         DateUtils du = new DateUtils();
+         du.test();
+    }
+    */
 }

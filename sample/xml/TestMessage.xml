@@ -19,6 +19,18 @@
 
 
 
+
+
+	<Message name="DateTimeMessage" rootMessage="true" db="true" dbCollection="DateTimeTest">
+	   <Attribute name="date" type="LocalDate"  dbKey="not-unique"/>
+	   <Attribute name="dateTime" type="LocalDateTime"  dbKey="not-unique"/>
+	   <Attribute name="value" type="int"/>
+	</Message>
+
+
+
+
+
 	<Message name="TestSubMessage">
 		<Attribute name="intValue" type="int" mandatory="true" min="42" max="84"/>
 		<Attribute name="strValue" type="String"  pattern="foo[X-Z]+bar"/>
@@ -34,7 +46,7 @@
 		<Attribute name="constArray" constantGroup="CG2" list="array"/>
 		<Attribute name="boolValue" type="boolean"/>
 		<Attribute name="charValue" type="char"/>
-		<Attribute name="dateValue" type="Date"/>
+		<Attribute name="dateValue" type="LocalDate"/>
 		<Attribute name="byteValue" type="byte"/>
 		<Attribute name="doubleValue" type="double"/>
 		<Attribute name="shortValue" type="short" mandatory="true" min="0" max="100" multiplieOf="3" />

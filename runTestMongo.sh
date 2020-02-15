@@ -1,2 +1,2 @@
 #!/bin/bash
-java -cp pojojson-tests-1.0.jar test.TestMongoSupport
+java -cp pojojson-tests-1.0.jar test.TestMongoSupportTest
