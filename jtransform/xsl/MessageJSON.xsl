@@ -163,6 +163,8 @@ import com.google.gson.GsonBuilder;
             @SuppressWarnings({"WeakerAccess","unused","unchecked"})
             public class <xsl:value-of select="@name"/> <xsl:if test="@extends"> extends <xsl:value-of select="@extends"/></xsl:if> implements MessageInterface <xsl:call-template name="declareInterfaces"/>
             {
+                public static String NAME = "<xsl:value-of select="@name"/>";
+
             <xsl:apply-templates mode="declareAttributes" select="."/>
             <xsl:apply-templates mode="declareConstructors" select="."/>
             <xsl:apply-templates mode="declareGettersSetters" select="."/>
