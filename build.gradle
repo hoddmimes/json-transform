@@ -87,7 +87,6 @@ project(':jtransform') {
     
     build.finalizedBy(buildGenerateJar)
 
-
     remotes {
         webServer {
             host = '192.168.42.11'
@@ -142,7 +141,10 @@ project(':jtransform') {
 
 
 project(':sample') {
-    
+    apply plugin: 'maven-publish'
+    apply plugin: "org.hidetake.ssh"
+
+
     task(generateTestClasses, type: JavaExec) {
         main = 'JsonTransform'
         classpath = files('../pojojson-generate-1.0.jar')
@@ -186,7 +188,50 @@ project(':sample') {
         }
     }
 
-    
+    remotes {
+        webServer {
+            host = '192.168.42.11'
+            port = 11721
+            user = 'bertilsson'
+            identity = file('/home/bertilsson/.ssh/id_rsa')
+        }
+    }
+
+    task deploy {
+        doLast {
+            ssh.run {
+                session(remotes.webServer) {
+                    execute 'sudo ./maven-create-dir.sh com/hoddmimes/pojojson/1.0'
+                }
+            }
+        }
+    }
+
+    tasks.withType(PublishToMavenRepository) { task ->
+        task.dependsOn deploy
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId = 'com.hoddmimes'
+                artifactId = 'pojojson'
+                artifact("../pojojson-" + version + ".jar") {
+                    extension 'jar'
+                }
+            }
+        }
+        repositories {
+            maven {
+                name 'hoddmimes'
+                url 'https://www.hoddmimes.com/maven'
+                credentials {
+                    username project.hoddmimesMavenUser
+                    password project.hoddmimesMavenPassword
+                }
+            }
+        }
+    }
     
 
     compileJava.dependsOn('generateTestClasses')
