@@ -60,4 +60,29 @@
 		<Attribute name="msgArray" type="TestSubMessage" list="array"/>
 		<Attribute name="timeString" type="String" mandatory="true"  pattern="\\d+-\\d+-\\d+ \\d+:\\d+:\\d+\\.\\d+"/>
 	</Message>
+
+
+	<Message name="BarMessage">
+		<Attribute name="strValue" type="String"/>
+		<Attribute name="intValue" type="int"/>
+		<Attribute name="boolValue" type="boolean"/>
+		<Attribute name="doubleValue" type="double"/>
+	</Message>
+
+	<Message name="FieMessage">
+		<Attribute name="name" type="String"/>
+		<Attribute name="value" type="String"/>
+	</Message>
+
+	<Message name="FooMessage">
+		<Attribute name="mapValue" type="Map"/>
+		<Attribute name="mapArray" type="Map" list="linked"/>
+		<Attribute name="intValue" type="int"/>
+		<Attribute name="strValue" type="String"/>
+		<Attribute name="barArray" type="BarMessage" list="array"/>
+		<Attribute name="fieArray" type="FieMessage" list="array"/>
+	</Message>
+
+
+
 </Messages>

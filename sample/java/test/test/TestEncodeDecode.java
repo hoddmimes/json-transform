@@ -4,16 +4,10 @@ import com.google.gson.*;
 import com.hoddmimes.jsontransform.JsonDecoder;
 import com.hoddmimes.jsontransform.JsonEncoder;
 import generated.*;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 
 
 public class TestEncodeDecode {
-
-
 
     private void test() {
 

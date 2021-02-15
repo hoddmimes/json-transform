@@ -11,6 +11,7 @@ import java.util.Base64;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 import static java.lang.Enum.valueOf;
 
@@ -52,6 +53,13 @@ public class JsonDecoder
         return DateUtils.stringToLocalDateTime( mDecoder.get(pAttribute).getAsString());
     }
 
+    public Map<String,String> readMap(String pAttribute) {
+        if (mDecoder.get(pAttribute) == null) {
+            return null;
+        }
+        return MapUtils.readMap( mDecoder.get(pAttribute).getAsJsonObject());
+    }
+
     public List<LocalDate> readDateArray(String pAttribute, String pListType) {
         if (mDecoder.get(pAttribute) == null) {
             return null;
@@ -59,7 +67,7 @@ public class JsonDecoder
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
         List<LocalDate> tList =  ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
-            tList.add( DateUtils.stringToLocalDate( mDecoder.get(pAttribute).getAsString()));
+            tList.add( DateUtils.stringToLocalDate( tArr.get(i).getAsString()));
         }
         return tList;
     }
@@ -71,10 +79,23 @@ public class JsonDecoder
         JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
         List<LocalDateTime> tList =  ListFactory.getList( pListType );
         for (int i = 0; i < tArr.size(); i++) {
-            tList.add( DateUtils.stringToLocalDateTime( mDecoder.get(pAttribute).getAsString()));
+            tList.add( DateUtils.stringToLocalDateTime( tArr.get(i).getAsString()));
         }
         return tList;
     }
+
+    public List<Map<String,String>> readMapArray(String pAttribute, String pListType) {
+        if (mDecoder.get(pAttribute) == null) {
+            return null;
+        }
+        JsonArray tArr = mDecoder.get(pAttribute).getAsJsonArray();
+        List<Map<String,String>>  tList =  ListFactory.getList( pListType );
+        for (int i = 0; i < tArr.size(); i++) {
+            tList.add( MapUtils.readMap( tArr.get(i).getAsJsonObject()));
+        }
+        return tList;
+    }
+
 
     public Boolean readBoolean(String pAttribute) {
         if (mDecoder.get(pAttribute) == null) {

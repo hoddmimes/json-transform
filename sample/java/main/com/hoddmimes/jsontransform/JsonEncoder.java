@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
+import java.util.Map;
 
 @SuppressWarnings({"WeakerAccess","unused"})
 public class JsonEncoder
@@ -51,6 +52,13 @@ public class JsonEncoder
         }
 
         mEncoder.addProperty(pAttribute, DateUtils.localDateTimeToString( pValue ));
+    }
+
+    public void add( String pAttribute, Map<String,String> pValue ) {
+        if (pValue == null) {
+            return;
+        }
+        mEncoder.add(pAttribute,  MapUtils.encodeMap(pValue));
     }
 
     public void add( String pAttribute, Boolean pValue ) {
@@ -125,6 +133,17 @@ public class JsonEncoder
         JsonArray tArr = new JsonArray();
         for (LocalDate d : pValue) {
             tArr.add(DateUtils.localDateToString(d));
+        }
+        mEncoder.add(pAttribute, tArr);
+    }
+
+    public void addMapArray(String pAttribute, List<Map<String,String>> pValue) {
+        if (pValue == null) {
+            return;
+        }
+        JsonArray tArr = new JsonArray();
+        for (Map<String,String> m : pValue) {
+            tArr.add( MapUtils.encodeMap(m));
         }
         mEncoder.add(pAttribute, tArr);
     }
