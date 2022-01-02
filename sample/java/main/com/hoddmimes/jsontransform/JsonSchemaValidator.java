@@ -8,13 +8,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.JSONTokener;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FilenameFilter;
+import java.io.*;
+import java.nio.file.Path;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 @SuppressWarnings({"WeakerAccess","unused","unchecked"})
 public class JsonSchemaValidator
@@ -23,37 +24,75 @@ public class JsonSchemaValidator
 
     private Map<String,Schema> mSchemaCache;
     private static String SCHEMA_TITLE = "title";
+    private boolean mVerbose = false;
 
 
 
-    public JsonSchemaValidator() {
-        this( null );
+    public JsonSchemaValidator( String pJsonSchemaSource ) {
+        this( pJsonSchemaSource, false);
     }
 
-    public JsonSchemaValidator(String pJsonSchemaDirectory ) {
-        String tJsonSchemaDirectory = (pJsonSchemaDirectory == null) ? "./jsonSchemas" : pJsonSchemaDirectory;
+
+    public JsonSchemaValidator(String pJsonSchemaSource, boolean pVerbose ) {
+        String tJsonSchemaSource = (pJsonSchemaSource == null) ? "./jsonSchemas" : pJsonSchemaSource;
+        mVerbose = pVerbose;
 
         mSchemaCache = new HashMap<>();
-        loadSchemas( tJsonSchemaDirectory );
+
+        File tFile = new File(tJsonSchemaSource);
+        if (tFile.isDirectory() && tFile.exists()) {
+            loadSchemasFromDirectory(tJsonSchemaSource);
+        } else {
+            loadSchemasFromResource(tJsonSchemaSource);
+        }
     }
 
-    private void loadSchemaFile(File pFile ) {
+
+
+
+    private void loadSchemaResource(InputStream pInputStream, String pSchemaSource ) {
         try {
-            JSONObject tRawSchemaObject = new JSONObject(new JSONTokener(new FileInputStream(pFile)));
+            JSONObject tRawSchemaObject = new JSONObject(new JSONTokener(pInputStream));
             String tMessageName = tRawSchemaObject.getString(SCHEMA_TITLE);
 
             Schema tJsonSchema = SchemaLoader.builder().useDefaults(true).schemaJson(tRawSchemaObject).build().load().build();
             mSchemaCache.put(tMessageName, tJsonSchema);
-            System.out.println("Successfully loaded JSON Schema: " + pFile.getAbsolutePath());
-
+            if (mVerbose) {
+                System.out.println("Successfully loaded JSON Schema: " + pSchemaSource);
+            }
         }
         catch(Exception e) {
-            System.err.println("failed to load schema \"" + pFile.getAbsolutePath() + "\" reason: " + e.getMessage());
+            System.err.println("failed to load schema \"" + pSchemaSource + "\" reason: " + e.getMessage());
             e.printStackTrace();
         }
     }
 
-    private void loadSchemas(String pJsonSchemaDirectory) {
+
+    private void loadSchemasFromResource( String pJsonSchemaSource ) {
+        ResourceHandler tResourceHandler = new ResourceHandler( pJsonSchemaSource, ".+\\.json");
+        List<Path> tSchemaResources = null;
+        try {
+            tSchemaResources = tResourceHandler.listResources();
+        }
+        catch(Exception e) {
+            System.out.println("Can not find schema resource \"" + pJsonSchemaSource + "\"");
+            System.exit(0);
+        }
+        for( Path tPath : tSchemaResources) {
+            try {
+                InputStream tInStream = tResourceHandler.getResourceAsStream(tPath);
+                loadSchemaResource( tInStream, tPath.toString() );
+            }
+            catch( IOException e) {
+                System.out.println("Can open schema file \"" + tPath.toString() + "\"");
+            }
+
+        }
+
+    }
+
+
+    private void loadSchemasFromDirectory(String pJsonSchemaDirectory) {
         File tFolder = new File(pJsonSchemaDirectory);
         if (!tFolder.exists()) {
             System.out.println("Can not find schema directory \"" + tFolder.getAbsolutePath() + "\"");
@@ -69,7 +108,14 @@ public class JsonSchemaValidator
         });
 
         for( int i = 0; i < tListOfFiles.length; i++) {
-            loadSchemaFile( tListOfFiles[i] );
+            try {
+                FileInputStream tInStream = new FileInputStream( tListOfFiles[i] );
+                loadSchemaResource( tInStream, tListOfFiles[i].getAbsolutePath() );
+            }
+            catch( IOException e) {
+                System.out.println("Can open schema file \"" + tListOfFiles[i].getAbsolutePath() + "\"");
+            }
+
         }
     }
 
