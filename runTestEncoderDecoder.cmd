@@ -1,1 +1,1 @@
-java -cp pojojson-tests-1.0.jar test.TestEncodeDecode
+java -cp pojojson-tests-1.2.jar test.TestEncodeDecode

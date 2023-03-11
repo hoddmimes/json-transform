@@ -162,6 +162,6 @@ The test assumes that there is a local Mongo DB instance without any authenticat
 ## JAR Files Built
 Three JAR files are built and placed on the project top level
 
-- pojojson-generate-1.0.jar  this JAR contains everyhing needed for generating POJO/JSON objects from a XML defintion, A generation of objects are typically done by invoking the following command "java -cp pojojson-generate-1.0.jar JsonTransform -xml *transformation-definions*.xml"
+- pojojson-generate-1.2.jar  this JAR contains everyhing needed for generating POJO/JSON objects from a XML defintion, A generation of objects are typically done by invoking the following command "java -cp pojojson-generate-1.2.jar JsonTransform -xml *transformation-definions*.xml"
 - pojojson-1.0.jar contains the support classes for encode/decode generated POJO/JSON objects. This JAR is need when there is a need for encode/decode generated objects.
 - pojojson-tests.jar contains all classes for running the test on the generated TestMessage object in this project.

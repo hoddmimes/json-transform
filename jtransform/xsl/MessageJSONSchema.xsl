@@ -24,10 +24,19 @@
             <Type name="double" jtype="number" />
             <Type name="String" jtype="string" />
             <Type name="byte[]" jtype="string" />
+            <Type name="LocalDateTime" jtype="string"/>
+            <Type name="LocalDate" jtype="string" />
+        </DataTypes>
+    </xsl:variable>
+
+    <xsl:variable name="AntiTypeDefinitions">
+        <DataTypes>
+            <Type name="Map"/>
         </DataTypes>
     </xsl:variable>
 
     <xsl:variable name="typeTable" select="xalan:nodeset($TypeTableDefinitions)/DataTypes"/>
+    <xsl:variable name="antiTypeTable" select="xalan:nodeset($AntiTypeDefinitions)/DataTypes"/>
 
 
     <xsl:template match="/MessagesRoot">
@@ -64,12 +73,12 @@
 <xsl:template mode="generateSchemaAttributes" match="Message">
 
     <xsl:for-each select="Attribute">
-        <xsl:if test="@array">
+        <xsl:if test="@list">
             <xsl:apply-templates mode="generateSchemaArrayAttributes" select=".">
                 <xsl:with-param name="lastPos" select="position()=last()"/>
             </xsl:apply-templates>
         </xsl:if>
-        <xsl:if test="not(@array)">
+        <xsl:if test="not(@list)">
             <xsl:apply-templates mode="generateSchemaSingelAttributes" select=".">
                 <xsl:with-param name="lastPos" select="position()=last()"/>
             </xsl:apply-templates>
@@ -96,7 +105,7 @@
             "type" : "array"
           }<xsl:if test="not($lastPos)">,</xsl:if>
         </xsl:if>
-        <xsl:if test="not($typeTable/Type[@name=$dataType])">
+        <xsl:if test="not($typeTable/Type[@name=$dataType]) and not($antiTypeTable/Type[@name=$dataType])">
           "<xsl:value-of select="@name"/>" : {
             "type" : "array",
             "items" : { "$ref": "file:<xsl:value-of select="$schemaDir"/><xsl:value-of select="$dataType"/>.json" }
@@ -123,7 +132,7 @@
               <xsl:with-param name="lastPos" select="$lastPos"/>
           </xsl:apply-templates>
         </xsl:if>
-        <xsl:if test="not($typeTable/Type[@name=$dataType])">
+        <xsl:if test="not($typeTable/Type[@name=$dataType]) and not($antiTypeTable/Type[@name=$dataType])">
           "<xsl:value-of select='@name'/>" : { "$ref" : "file:<xsl:value-of select="$schemaDir"/><xsl:value-of select="$dataType"/>.json" }<xsl:if test="not($lastPos)">,</xsl:if></xsl:if>
     </xsl:if>
 </xsl:template>

@@ -1,3 +1,5 @@
-include "jtransform"
-include "sample"
+rootProject.name = 'json-transform'
+include 'jtransform'
+include 'samples'
+include 'samples'
 

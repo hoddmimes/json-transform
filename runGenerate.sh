@@ -1,4 +1,4 @@
 #!/bin/bash
-cd ./sample
-java -cp ../pojojson-generate-1.0.jar JsonTransform -xml ./xml/TestMessagesFileSet.xml
+cd ./samples
+java -cp ../pojojson-generate-1.2.jar JsonTransform -xml ./xml/TestMessagesFileSet.xml
 cd ../
