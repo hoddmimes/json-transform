@@ -104,7 +104,7 @@ The file generate.sh do this for you i.e. generate the test files.
 </Messages>
 </small>
 
-**the generated POJO/JSON object based upon the definition above can be viewed here: [TestMessage.java](https://github.com/hoddmimes/json-transform/blob/master/samples/java/main/generated/TestMessage.java)**
+**the generated POJO/JSON object based upon the definition above can be viewed here: [TestMessage.java](https://github.com/hoddmimes/json-transform/blob/master/samples/src/main/java/generated/TestMessage.java)**
 
 ### Message Extensions
 The natural way of extending message is to subclass a generated POJO message object However there is also a _dirty way_ of adding implementation to a generated POJO message by adding the code 
@@ -163,7 +163,7 @@ public int incrementFoo( int pIncrementValue )
 
 ## Mongo Support
 Optionally message objects can also be generated to support Mongo encode/decoding by implementing the interface
-[MessageMongoInterface.java]([https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/com/hoddmimes/jsontransform/MessageMongoInterface.java](https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/com/hoddmimes/jsontransform/MessageMongoInterface.java))
+[MessageMongoInterface.java]([https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/com/hoddmimes/json-transform/MessageMongoInterface.java](https://github.com/hoddmimes/json-transform/blob/master/sample/java/main/com/hoddmimes/jsontransform/MessageMongoInterface.java))
 
 Three optional directives rules which and how message objects  implements Mongo support.
  * On a top level <Messages *mongoSupport="true"*> the attribute *mongoSupport* rules whatever the message definitions in the XML files
