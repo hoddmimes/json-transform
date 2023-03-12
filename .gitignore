@@ -11,12 +11,12 @@
 .mtj.tmp/
 
 .gradle/
-sample/build/
-sample/out
+samples/build/
+samples/out
 json-transform.iml
 jtransform/build/
-sample/jsonSchema/Car.json
-sample/jsonSchema/Vehicle.json
+samples/jsonSchema/Car.json
+samples/jsonSchema/Vehicle.json
 
 
 # Package Files #
