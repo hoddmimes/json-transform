@@ -1,0 +1,19 @@
+
+ {
+   "$schema": "http://json-schema.org/draft-06/schema#",
+   "title": "FooMessage",
+   "type": "object",
+     "properties" : { 
+          "intValue" : { "type" : "integer" },
+          "strValue" : { "type" : "string" },
+          "barArray" : {
+            "type" : "array",
+            "items" : { "$ref": "file:./samples/jsonSchemas/BarMessage.json" }
+          },
+          "fieArray" : {
+            "type" : "array",
+            "items" : { "$ref": "file:./samples/jsonSchemas/FieMessage.json" }
+          }
+     }
+}
+                

@@ -1,0 +1,13 @@
+
+ {
+   "$schema": "http://json-schema.org/draft-06/schema#",
+   "title": "BarMessage",
+   "type": "object",
+     "properties" : { 
+          "strValue" : { "type" : "string" },
+          "intValue" : { "type" : "integer" },
+          "boolValue" : { "type" : "boolean" },
+          "doubleValue" : { "type" : "number" }
+     }
+}
+                

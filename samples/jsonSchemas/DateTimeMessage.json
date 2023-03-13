@@ -1,0 +1,18 @@
+
+ {
+   "$schema": "http://json-schema.org/draft-06/schema#",
+   "title": "DateTimeMessage",
+   "type": "object",
+     "properties" : { 
+     "DateTimeMessage" : {
+       "type" : "object",
+       "properties" : { 
+          "date" : { "type" : "string" },
+          "dateTime" : { "type" : "string" },
+          "value" : { "type" : "integer" }
+     }
+    }
+   },
+   "required" : ["DateTimeMessage"]
+}
+                

@@ -10,13 +10,18 @@
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
+gradle/
 .gradle/
+.idea/
+build/
 samples/build/
 samples/out
 json-transform.iml
 jtransform/build/
 samples/jsonSchema/Car.json
 samples/jsonSchema/Vehicle.json
+gradlew
+gradlew.bat
 
 
 # Package Files #
