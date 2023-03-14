@@ -1,1 +1,1 @@
-java -cp pojojson-tests-1.2.jar test.TestSchema
+java -cp pojojson-tests-1.3.jar test.TestSchema

@@ -1,20 +1,22 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="1.0"
-                xmlns:java="http://xml.apache.org/xslt/java"
-                xmlns:extensions="com.hoddmimes.jtransform.Transform$Extensions"
-                xmlns:redirect="com.hoddmimes.jtransform.Transform$Redirect"
-                extension-element-prefixes="redirect extensions"
-                xmlns:xalan="http://xml.apache.org/xslt"
-                exclude-result-prefixes="xalan java">
+<xsl:stylesheet version="3.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+                xmlns:functx="http://www.functx.com"
+                exclude-result-prefixes="map">
 
     <xsl:output method="text"/>
     <xsl:param name="outPath"/>
     <xsl:param name="package"/>
 
 
+    <xsl:include href="functx-1.0.1.xsl"/>
+
+
 
     <xsl:template match="/MessagesRoot">
-        <redirect:write select="concat($outPath,'MongoAux.java')">
+        <xsl:variable name="file" select="concat('file://',$outPath,'MongoAux.java')"/>
+        <xsl:result-document href="{$file}" method="text" omit-xml-declaration="yes" encoding="utf-8">
 /*
 * Copyright (c)  Hoddmimes Solution AB 2021.
 *
@@ -183,7 +185,8 @@
             }
 
             }
-        </redirect:write>
+            <xsl:message>Created file <xsl:value-of select="$file"/></xsl:message>
+        </xsl:result-document>
     </xsl:template>
 
     <xsl:template mode="createCollections" match="Message">
@@ -275,31 +278,31 @@
 
     <xsl:template name="filterSingle">
         <xsl:if test="@type='LocalDate'">
-            Bson tKeyFilter= Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateToString(p<xsl:value-of select="extensions:upperFirst(@name)"/>));</xsl:if>
+            Bson tKeyFilter= Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateToString(p<xsl:value-of select="functx:capitalize-first(@name)"/>));</xsl:if>
         <xsl:if test="@type='LocalDateTime'">
-            Bson tKeyFilter= Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateTimeToString(p<xsl:value-of select="extensions:upperFirst(@name)"/>));</xsl:if>
+            Bson tKeyFilter= Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateTimeToString(p<xsl:value-of select="functx:capitalize-first(@name)"/>));</xsl:if>
         <xsl:if test="not(@type='LocalDateTime') and not(@type='LocalDate')">
-            Bson tKeyFilter= Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="extensions:upperFirst(@name)"/>); </xsl:if>
+            Bson tKeyFilter= Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="functx:capitalize-first(@name)"/>); </xsl:if>
     </xsl:template>
 
     <xsl:template name="filtersParams">
         Bson tKeyFilter= Filters.and( <xsl:for-each select="Attribute[@dbKey]">
         <xsl:if test="@type='LocalDate'">
-           Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateToString(p<xsl:value-of select="extensions:upperFirst(@name)"/>))</xsl:if>
+           Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateToString(p<xsl:value-of select="functx:capitalize-first(@name)"/>))</xsl:if>
         <xsl:if test="@type='LocalDateTime'">
-            Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateTimeToString(p<xsl:value-of select="extensions:upperFirst(@name)"/>))</xsl:if>
+            Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateTimeToString(p<xsl:value-of select="functx:capitalize-first(@name)"/>))</xsl:if>
         <xsl:if test="not(@type='LocalDateTime') and not(@type='LocalDate')">
-            Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="extensions:upperFirst(@name)"/>) </xsl:if><xsl:if test="not(position()=last())">,</xsl:if></xsl:for-each>);
+            Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="functx:capitalize-first(@name)"/>) </xsl:if><xsl:if test="not(position()=last())">,</xsl:if></xsl:for-each>);
     </xsl:template>
 
     <xsl:template name="filtersMessage">
         Bson tKeyFilter= Filters.and( <xsl:for-each select="Attribute[@dbKey]">
         <xsl:if test="@type='LocalDate'">
-            Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateToString(p<xsl:value-of select="../@name"/>.get<xsl:value-of select="extensions:upperFirst(@name)"/>().get()))</xsl:if>
+            Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateToString(p<xsl:value-of select="../@name"/>.get<xsl:value-of select="functx:capitalize-first(@name)"/>().get()))</xsl:if>
         <xsl:if test="@type='LocalDateTime'">
-            Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateTimeToString(p<xsl:value-of select="../@name"/>.get<xsl:value-of select="extensions:upperFirst(@name)"/>().get()))</xsl:if>
+            Filters.eq("<xsl:value-of select='@name'/>", DateUtils.localDateTimeToString(p<xsl:value-of select="../@name"/>.get<xsl:value-of select="functx:capitalize-first(@name)"/>().get()))</xsl:if>
         <xsl:if test="not(@type='LocalDateTime') and not(@type='LocalDate')">
-            Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="../@name"/>.get<xsl:value-of select="extensions:upperFirst(@name)"/>().get()) </xsl:if><xsl:if test="not(position()=last())">,</xsl:if></xsl:for-each>);
+            Filters.eq("<xsl:value-of select='@name'/>", p<xsl:value-of select="../@name"/>.get<xsl:value-of select="functx:capitalize-first(@name)"/>().get()) </xsl:if><xsl:if test="not(position()=last())">,</xsl:if></xsl:for-each>);
     </xsl:template>
 
     <xsl:template name="crudParams">
@@ -308,7 +311,7 @@
 
     <xsl:template name="crudParam">
         <xsl:if test="@type='byte[]'">String pB64<xsl:value-of select="@name"/></xsl:if>
-        <xsl:if test="not(@type='byte[]')"><xsl:value-of select="@type"/> p<xsl:value-of select="extensions:upperFirst(@name)"/></xsl:if>
+        <xsl:if test="not(@type='byte[]')"><xsl:value-of select="@type"/> p<xsl:value-of select="functx:capitalize-first(@name)"/></xsl:if>
     </xsl:template>
 
 
@@ -317,19 +320,19 @@
         /**
         * CRUD DELETE methods
         */
-        public long delete<xsl:value-of select="extensions:upperFirst(@name)"/>( Bson pFilter) {
+        public long delete<xsl:value-of select="functx:capitalize-first(@name)"/>( Bson pFilter) {
            DeleteResult tResult = m<xsl:call-template name="getCollectionName"/>Collection.deleteMany( pFilter );
            return tResult.getDeletedCount();
         }
 
-        public long delete<xsl:value-of select="extensions:upperFirst(@name)"/>ByMongoId( String pMongoObjectId) {
+        public long delete<xsl:value-of select="functx:capitalize-first(@name)"/>ByMongoId( String pMongoObjectId) {
             Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
             DeleteResult tResult = m<xsl:call-template name="getCollectionName"/>Collection.deleteOne( tFilter );
             return tResult.getDeletedCount();
         }
 
         <xsl:if test="count(Attribute[@dbKey]) &gt; 1">
-            public long delete<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:call-template name="crudParams"/> ) {
+            public long delete<xsl:value-of select="functx:capitalize-first(@name)"/>( <xsl:call-template name="crudParams"/> ) {
              <xsl:call-template name="filtersParams"/>
              DeleteResult tResult =  m<xsl:call-template name="getCollectionName"/>Collection.deleteMany(tKeyFilter);
              return tResult.getDeletedCount();
@@ -337,7 +340,7 @@
         </xsl:if>
 
         <xsl:for-each select="Attribute[@dbKey]">
-            public long delete<xsl:value-of select="extensions:upperFirst(../@name)"/>By<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:call-template name="crudParam"/> ) {
+            public long delete<xsl:value-of select="functx:capitalize-first(../@name)"/>By<xsl:value-of select="functx:capitalize-first(@name)"/>( <xsl:call-template name="crudParam"/> ) {
                 <xsl:call-template name="filterSingle"/>
                 DeleteResult tResult =  m<xsl:call-template name="getCollectionNameOneUp"/>Collection.deleteMany(tKeyFilter);
                 return tResult.getDeletedCount();
@@ -349,22 +352,22 @@
         /**
         * CRUD INSERT methods
         */
-        public void insert<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/> ) {
-            Document tDoc = p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument();
+        public void insert<xsl:value-of select="functx:capitalize-first(@name)"/>( <xsl:value-of select="@name"/> p<xsl:value-of select="functx:capitalize-first(@name)"/> ) {
+            Document tDoc = p<xsl:value-of select="functx:capitalize-first(@name)"/>.getMongoDocument();
             m<xsl:call-template name="getCollectionName"/>Collection.insertOne( tDoc );
             ObjectId _tId = tDoc.getObjectId("_id");
             if (_tId != null) {
-                p<xsl:value-of select="extensions:upperFirst(@name)"/>.setMongoId( _tId.toString());
+                p<xsl:value-of select="functx:capitalize-first(@name)"/>.setMongoId( _tId.toString());
             }
         }
 
-        public void insert<xsl:value-of select="extensions:upperFirst(@name)"/>( List&lt;<xsl:value-of select="@name"/>&gt; p<xsl:value-of select="extensions:upperFirst(@name)"/>List ) {
-           List&lt;Document&gt; tList = p<xsl:value-of select="extensions:upperFirst(@name)"/>List.stream().map( <xsl:value-of select="extensions:upperFirst(@name)"/>::getMongoDocument).collect(Collectors.toList());
+        public void insert<xsl:value-of select="functx:capitalize-first(@name)"/>( List&lt;<xsl:value-of select="@name"/>&gt; p<xsl:value-of select="functx:capitalize-first(@name)"/>List ) {
+           List&lt;Document&gt; tList = p<xsl:value-of select="functx:capitalize-first(@name)"/>List.stream().map( <xsl:value-of select="functx:capitalize-first(@name)"/>::getMongoDocument).collect(Collectors.toList());
            m<xsl:call-template name="getCollectionName"/>Collection.insertMany( tList );
            for( int i = 0; i &lt; tList.size(); i++ ) {
              ObjectId _tId = tList.get(i).getObjectId("_id");
              if (_tId != null) {
-                p<xsl:value-of select="extensions:upperFirst(@name)"/>List.get(i).setMongoId( _tId.toString());
+                p<xsl:value-of select="functx:capitalize-first(@name)"/>List.get(i).setMongoId( _tId.toString());
              }
            }
         }
@@ -376,38 +379,38 @@
         /**
         * CRUD UPDATE (INSERT) methods
         */
-        public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>ByMongoId( String pMongoObjectId, <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/> ) {
+        public UpdateResult update<xsl:value-of select="functx:capitalize-first(@name)"/>ByMongoId( String pMongoObjectId, <xsl:value-of select="@name"/> p<xsl:value-of select="functx:capitalize-first(@name)"/> ) {
             Bson tFilter =  Filters.eq("_id", new ObjectId(pMongoObjectId));
-            Document tDocSet = new Document("$set", p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument());
+            Document tDocSet = new Document("$set", p<xsl:value-of select="functx:capitalize-first(@name)"/>.getMongoDocument());
             UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tFilter, tDocSet, new UpdateOptions());
             return tUpdSts;
         }
 
-        public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/>, boolean pUpdateAllowInsert ) {
+        public UpdateResult update<xsl:value-of select="functx:capitalize-first(@name)"/>( <xsl:value-of select="@name"/> p<xsl:value-of select="functx:capitalize-first(@name)"/>, boolean pUpdateAllowInsert ) {
         UpdateOptions tOptions = new UpdateOptions().upsert(pUpdateAllowInsert);
         <xsl:call-template name="filtersMessage"/>
 
 
-        Document tDocSet = new Document("$set", p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument());
+        Document tDocSet = new Document("$set", p<xsl:value-of select="functx:capitalize-first(@name)"/>.getMongoDocument());
 
         UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tKeyFilter, tDocSet, tOptions);
         return tUpdSts;
         }
 
 
-        public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:call-template name="crudParams"/>, <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/>, boolean pUpdateAllowInsert ) {
+        public UpdateResult update<xsl:value-of select="functx:capitalize-first(@name)"/>( <xsl:call-template name="crudParams"/>, <xsl:value-of select="@name"/> p<xsl:value-of select="functx:capitalize-first(@name)"/>, boolean pUpdateAllowInsert ) {
           UpdateOptions tOptions = new UpdateOptions().upsert(pUpdateAllowInsert);
           <xsl:call-template name="filtersParams"/>
 
-           Document tDocSet = new Document("$set", p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument());
+           Document tDocSet = new Document("$set", p<xsl:value-of select="functx:capitalize-first(@name)"/>.getMongoDocument());
 
            UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( tKeyFilter, tDocSet, tOptions);
            return tUpdSts;
         }
 
-        public UpdateResult update<xsl:value-of select="extensions:upperFirst(@name)"/>( Bson pFilter, <xsl:value-of select="@name"/> p<xsl:value-of select="extensions:upperFirst(@name)"/>, boolean pUpdateAllowInsert ) {
+        public UpdateResult update<xsl:value-of select="functx:capitalize-first(@name)"/>( Bson pFilter, <xsl:value-of select="@name"/> p<xsl:value-of select="functx:capitalize-first(@name)"/>, boolean pUpdateAllowInsert ) {
            UpdateOptions tOptions = new UpdateOptions().upsert(pUpdateAllowInsert);
-           Document tDocSet = new Document("$set", p<xsl:value-of select="extensions:upperFirst(@name)"/>.getMongoDocument());
+           Document tDocSet = new Document("$set", p<xsl:value-of select="functx:capitalize-first(@name)"/>.getMongoDocument());
            UpdateResult tUpdSts = m<xsl:call-template name="getCollectionName"/>Collection.updateOne( pFilter, tDocSet, tOptions);
            return tUpdSts;
         }
@@ -418,11 +421,11 @@
         * CRUD FIND methods
         */
 
-        public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="extensions:upperFirst(@name)"/>( Bson pFilter  ) {
-         return find<xsl:value-of select="extensions:upperFirst(@name)"/>( pFilter, null );
+        public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="functx:capitalize-first(@name)"/>( Bson pFilter  ) {
+         return find<xsl:value-of select="functx:capitalize-first(@name)"/>( pFilter, null );
         }
 
-        public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="extensions:upperFirst(@name)"/>( Bson pFilter, Bson pSortDoc  ) {
+        public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="functx:capitalize-first(@name)"/>( Bson pFilter, Bson pSortDoc  ) {
 
         FindIterable&lt;Document&gt; tDocuments = (pSortDoc == null) ? this.m<xsl:call-template name="getCollectionName"/>Collection.find( pFilter ) :
         this.m<xsl:call-template name="getCollectionName"/>Collection.find( pFilter ).sort( pSortDoc );
@@ -436,16 +439,16 @@
         MongoCursor&lt;Document&gt; tIter = tDocuments.iterator();
         while ( tIter.hasNext()) {
         Document tDoc = tIter.next();
-        <xsl:value-of select='@name'/> t<xsl:value-of select="extensions:upperFirst(@name)"/> = new <xsl:value-of select='@name'/>();
-        t<xsl:value-of select="extensions:upperFirst(@name)"/>.decodeMongoDocument( tDoc );
-        tResult.add( t<xsl:value-of select="extensions:upperFirst(@name)"/> );
+        <xsl:value-of select='@name'/> t<xsl:value-of select="functx:capitalize-first(@name)"/> = new <xsl:value-of select='@name'/>();
+        t<xsl:value-of select="functx:capitalize-first(@name)"/>.decodeMongoDocument( tDoc );
+        tResult.add( t<xsl:value-of select="functx:capitalize-first(@name)"/> );
         }
         return tResult;
         }
 
 
 
-        public List&lt;<xsl:value-of select='@name'/>&gt; findAll<xsl:value-of select="extensions:upperFirst(@name)"/>()
+        public List&lt;<xsl:value-of select='@name'/>&gt; findAll<xsl:value-of select="functx:capitalize-first(@name)"/>()
         {
            List&lt;<xsl:value-of select='@name'/>&gt; tResult = new ArrayList&lt;&gt;();
 
@@ -453,14 +456,14 @@
            MongoCursor&lt;Document&gt; tIter = tDocuments.iterator();
            while( tIter.hasNext()) {
                Document tDoc = tIter.next();
-               <xsl:value-of select='@name'/> t<xsl:value-of select="extensions:upperFirst(@name)"/> = new <xsl:value-of select='@name'/>();
-               t<xsl:value-of select="extensions:upperFirst(@name)"/>.decodeMongoDocument( tDoc );
-               tResult.add(t<xsl:value-of select="extensions:upperFirst(@name)"/>);
+               <xsl:value-of select='@name'/> t<xsl:value-of select="functx:capitalize-first(@name)"/> = new <xsl:value-of select='@name'/>();
+               t<xsl:value-of select="functx:capitalize-first(@name)"/>.decodeMongoDocument( tDoc );
+               tResult.add(t<xsl:value-of select="functx:capitalize-first(@name)"/>);
             }
             return tResult;
         }
 
-        public <xsl:value-of select='@name'/> find<xsl:value-of select="extensions:upperFirst(@name)"/>ByMongoId( String pMongoObjectId ) {
+        public <xsl:value-of select='@name'/> find<xsl:value-of select="functx:capitalize-first(@name)"/>ByMongoId( String pMongoObjectId ) {
         Bson tFilter=  Filters.eq("_id", new ObjectId(pMongoObjectId));
 
         FindIterable&lt;Document&gt; tDocuments = this.m<xsl:call-template name="getCollectionName"/>Collection.find( tFilter );
@@ -472,15 +475,15 @@
         MongoCursor&lt;Document&gt; tIter = tDocuments.iterator();
         while ( tIter.hasNext()) {
         Document tDoc = tIter.next();
-        <xsl:value-of select='@name'/> t<xsl:value-of select="extensions:upperFirst(@name)"/> = new <xsl:value-of select='@name'/>();
-        t<xsl:value-of select="extensions:upperFirst(@name)"/>.decodeMongoDocument( tDoc );
-        tResult.add( t<xsl:value-of select="extensions:upperFirst(@name)"/> );
+        <xsl:value-of select='@name'/> t<xsl:value-of select="functx:capitalize-first(@name)"/> = new <xsl:value-of select='@name'/>();
+        t<xsl:value-of select="functx:capitalize-first(@name)"/>.decodeMongoDocument( tDoc );
+        tResult.add( t<xsl:value-of select="functx:capitalize-first(@name)"/> );
         }
         return (tResult.size() &gt; 0) ? tResult.get(0) : null;
         }
 
 
-        public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:call-template name="crudParams"/> ) {
+        public List&lt;<xsl:value-of select='@name'/>&gt; find<xsl:value-of select="functx:capitalize-first(@name)"/>( <xsl:call-template name="crudParams"/> ) {
             <xsl:call-template name="filtersParams"/>
 
         FindIterable&lt;Document&gt; tDocuments = this.m<xsl:call-template name="getCollectionName"/>Collection.find( tKeyFilter );
@@ -492,15 +495,15 @@
         MongoCursor&lt;Document&gt; tIter = tDocuments.iterator();
         while ( tIter.hasNext()) {
            Document tDoc = tIter.next();
-           <xsl:value-of select='@name'/> t<xsl:value-of select="extensions:upperFirst(@name)"/> = new <xsl:value-of select='@name'/>();
-           t<xsl:value-of select="extensions:upperFirst(@name)"/>.decodeMongoDocument( tDoc );
-           tResult.add( t<xsl:value-of select="extensions:upperFirst(@name)"/> );
+           <xsl:value-of select='@name'/> t<xsl:value-of select="functx:capitalize-first(@name)"/> = new <xsl:value-of select='@name'/>();
+           t<xsl:value-of select="functx:capitalize-first(@name)"/>.decodeMongoDocument( tDoc );
+           tResult.add( t<xsl:value-of select="functx:capitalize-first(@name)"/> );
         }
         return tResult;
         }
 
         <xsl:for-each select="Attribute[@dbKey]">
-            public List&lt;<xsl:value-of select='../@name'/>&gt; find<xsl:value-of select="extensions:upperFirst(../@name)"/>By<xsl:value-of select="extensions:upperFirst(@name)"/>( <xsl:call-template name="crudParam"/> ) {
+            public List&lt;<xsl:value-of select='../@name'/>&gt; find<xsl:value-of select="functx:capitalize-first(../@name)"/>By<xsl:value-of select="functx:capitalize-first(@name)"/>( <xsl:call-template name="crudParam"/> ) {
             List&lt;<xsl:value-of select='../@name'/>&gt; tResult = new ArrayList&lt;&gt;();
             <xsl:call-template name="filterSingle"/>
 
@@ -508,9 +511,9 @@
             MongoCursor&lt;Document&gt; tIter = tDocuments.iterator();
             while( tIter.hasNext()) {
             Document tDoc = tIter.next();
-            <xsl:value-of select='../@name'/> t<xsl:value-of select="extensions:upperFirst(../@name)"/> = new <xsl:value-of select='../@name'/>();
-            t<xsl:value-of select="extensions:upperFirst(../@name)"/>.decodeMongoDocument( tDoc );
-            tResult.add(t<xsl:value-of select="extensions:upperFirst(../@name)"/>);
+            <xsl:value-of select='../@name'/> t<xsl:value-of select="functx:capitalize-first(../@name)"/> = new <xsl:value-of select='../@name'/>();
+            t<xsl:value-of select="functx:capitalize-first(../@name)"/>.decodeMongoDocument( tDoc );
+            tResult.add(t<xsl:value-of select="functx:capitalize-first(../@name)"/>);
             }
             return tResult;
             }

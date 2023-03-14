@@ -1,22 +1,21 @@
-<?xml version="1.0"?>
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-				version="1.0"
-				xmlns:java="http://xml.apache.org/xslt/java"
-				xmlns:extensions ="com.hoddmimes.jtransform.Transform$Extensions"
-				xmlns:redirect   ="com.hoddmimes.jtransform.Transform$Redirect"
-				extension-element-prefixes="redirect extensions"
-				xmlns:xalan="http://xml.apache.org/xslt"
-				exclude-result-prefixes="xalan java">
+<xsl:stylesheet version="3.0"
+				xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+				xmlns:xs="http://www.w3.org/2001/XMLSchema"
+				xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+				xmlns:functx="http://www.functx.com"
+				exclude-result-prefixes="map">
 
 	<xsl:output method="text"/>
 	<xsl:param name="outPath"/>
 	<xsl:param name="package"/>
 
-
+	<xsl:include href="functx-1.0.1.xsl"/>
 
 <xsl:template match="/MessagesRoot">
 
-<redirect:write select="concat($outPath,'MessageFactory.java')">
+	<xsl:variable name="file" select="concat('file://',$outPath,'MessageFactory.java')"/>
+	<xsl:result-document href="{$file}" method="text" omit-xml-declaration="yes" encoding="utf-8">
+
 /*
 * Copyright (c)  Hoddmimes Solution AB 2021.
 *
@@ -87,8 +86,8 @@ public class MessageFactory implements MessageFactoryInterface
 		}	
 	}
 }
-
-</redirect:write>
+		<xsl:message>Created file <xsl:value-of select="$file"/></xsl:message>
+	</xsl:result-document>
 </xsl:template>
 
 

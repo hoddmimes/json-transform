@@ -18,6 +18,7 @@ import javax.xml.transform.stream.StreamSource;
 
 public class XslFiles
 {
+    private String mXslDir;
     private boolean isLoadedFromJar() {
         String tSrc = this.getClass().getProtectionDomain().getCodeSource().getLocation().toString();
         if (tSrc.toLowerCase().endsWith(".jar")) {
@@ -27,7 +28,9 @@ public class XslFiles
         }
     }
 
-
+    public XslFiles( String pXslDir ) {
+        mXslDir = pXslDir;
+    }
 
     public  String convertStreamToString(InputStream is, boolean noControlChar) throws IOException {
         if (is != null) {
@@ -85,7 +88,7 @@ public class XslFiles
         try {
             if (isLoadedFromJar()) {
                 tInputStream = getClass().getClassLoader().getResourceAsStream(pFilename);
-                System.out.println("jar xsl url filename: " + pFilename);
+                //System.out.println("jar xsl url filename: " + pFilename);
                 URL url = getClass().getClassLoader().getResource(pFilename);
                 //System.out.println("jar xsl url: " + url.toExternalForm());
                 tSystemId = url.toExternalForm();
@@ -94,8 +97,10 @@ public class XslFiles
                 //tXslContent = new String( tBuffer ).replaceAll("\\p{Cntrl}", "");
 
             } else {
-                tInputStream = new FileInputStream("./xsl/" + pFilename ); // pFilename
-                File tFile = new File( pFilename );
+                File tFile = new File( mXslDir + pFilename );
+                System.out.println( tFile.getAbsolutePath());
+                tInputStream = new FileInputStream( mXslDir + pFilename ); // pFilename
+
                 tSystemId = tFile.toURI().toURL().toExternalForm();
                 tXslContent = convertStreamToString( tInputStream, false );
             }

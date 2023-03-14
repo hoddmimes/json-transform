@@ -3,7 +3,6 @@ package test;
 
 import com.hoddmimes.jsontransform.JsonDecoder;
 import generated.BarMessage;
-import generated.FieMessage;
 import generated.FooMessage;
 
 

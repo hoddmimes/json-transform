@@ -1,17 +1,15 @@
-<xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                version="1.0"
-                xmlns:java="http://xml.apache.org/xslt/java"
-                xmlns:extensions="com.hoddmimes.jtransform.Transform$Extensions"
-                xmlns:redirect="com.hoddmimes.jtransform.Transform$Redirect"
-                extension-element-prefixes="redirect extensions"
-                xmlns:xalan="http://xml.apache.org/xslt"
-                exclude-result-prefixes="xalan java">
+<xsl:stylesheet version="3.0"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+                xmlns:functx="http://www.functx.com"
+                exclude-result-prefixes="map">
 
     <xsl:output method="text"/>
     <xsl:param name="outPath"/>
     <xsl:param name="schemaDir"/>
 
-
+    <xsl:include href="functx-1.0.1.xsl"/>
 
     <xsl:variable name="TypeTableDefinitions">
         <DataTypes>
@@ -35,14 +33,16 @@
         </DataTypes>
     </xsl:variable>
 
-    <xsl:variable name="typeTable" select="xalan:nodeset($TypeTableDefinitions)/DataTypes"/>
-    <xsl:variable name="antiTypeTable" select="xalan:nodeset($AntiTypeDefinitions)/DataTypes"/>
+    <xsl:variable name="typeTable"     select="//$TypeTableDefinitions/DataTypes"/>
+    <xsl:variable name="antiTypeTable" select="//$AntiTypeDefinitions/DataTypes"/>
 
 
     <xsl:template match="/MessagesRoot">
         <xsl:for-each select="Messages">
             <xsl:for-each select="Message">
-                <redirect:write select="concat($outPath,@name,'.json')">
+                <xsl:variable name="file" select="concat('file://', $outPath,@name,'.json')"/>
+                <xsl:result-document href="{$file}" method="text" omit-xml-declaration="yes" encoding="utf-8">
+
  {
    "$schema": "http://json-schema.org/draft-06/schema#",
    "title": "<xsl:value-of select='@name'/>",
@@ -57,7 +57,8 @@
    },
    "required" : ["<xsl:value-of select='@name'/>"]</xsl:if>
 }
-                </redirect:write>
+                    <xsl:message>Created file <xsl:value-of select="$file"/></xsl:message>
+                </xsl:result-document>
             </xsl:for-each>
         </xsl:for-each>
     </xsl:template>
