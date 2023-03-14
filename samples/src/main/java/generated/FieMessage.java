@@ -17,143 +17,177 @@
  */
 package generated;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Stack;
+import java.util.List;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.OptionalDouble;
+import java.util.OptionalLong;
+import java.io.IOException;
+
+
+
+
+    import org.bson.BsonType;
+    import org.bson.Document;
+    import org.bson.conversions.Bson;
+    import com.mongodb.BasicDBObject;
+    import org.bson.types.ObjectId;
+    import com.hoddmimes.jsontransform.MessageMongoInterface;
+    import com.hoddmimes.jsontransform.MongoDecoder;
+    import com.hoddmimes.jsontransform.MongoEncoder;
+
+
+import com.hoddmimes.jsontransform.MessageInterface;
 import com.hoddmimes.jsontransform.JsonDecoder;
 import com.hoddmimes.jsontransform.JsonEncoder;
-import com.hoddmimes.jsontransform.MessageInterface;
-
-import java.util.Optional;
-
-
-@SuppressWarnings({"WeakerAccess", "unused", "unchecked"})
-public class FieMessage implements MessageInterface {
-    public static String NAME = "FieMessage";
+import com.hoddmimes.jsontransform.ListFactory;
+import com.google.gson.JsonObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 
-    private String mName;
-    private String mValue;
 
-    public FieMessage() {
+            
 
-    }
+            @SuppressWarnings({"WeakerAccess","unused","unchecked"})
+            public class FieMessage implements MessageInterface 
+            {
+                public static String NAME = "FieMessage";
 
-    public FieMessage(String pJsonString) {
+            
+                    private String mName;
+                    private String mValue;
+               public FieMessage()
+               {
+                
+               }
 
-        JsonDecoder tDecoder = new JsonDecoder(pJsonString);
-        this.decode(tDecoder);
-    }
-
-    public static Builder getFieMessageBuilder() {
-        return new FieMessage.Builder();
-    }
-
-    public Optional<String> getName() {
-        return Optional.ofNullable(mName);
-    }
-
-    public FieMessage setName(String pName) {
-        mName = pName;
-        return this;
-    }
-
-    public Optional<String> getValue() {
-        return Optional.ofNullable(mValue);
-    }
-
-    public FieMessage setValue(String pValue) {
-        mValue = pValue;
-        return this;
-    }
-
-    public String getMessageName() {
+               public FieMessage(String pJsonString ) {
+                    
+                    JsonDecoder tDecoder = new JsonDecoder( pJsonString );
+                    this.decode( tDecoder );
+               }
+    
+            public FieMessage setName( String pName ) {
+            mName = pName;
+            return this;
+            }
+            public Optional<String> getName() {
+              return  Optional.ofNullable(mName);
+            }
+        
+            public FieMessage setValue( String pValue ) {
+            mValue = pValue;
+            return this;
+            }
+            public Optional<String> getValue() {
+              return  Optional.ofNullable(mValue);
+            }
+        
+        public String getMessageName() {
         return "FieMessage";
-    }
+        }
+    
 
-    public JsonObject toJson() {
-        JsonEncoder tEncoder = new JsonEncoder();
-        this.encode(tEncoder);
-        return tEncoder.toJson();
-    }
+        public JsonObject toJson() {
+            JsonEncoder tEncoder = new JsonEncoder();
+            this.encode( tEncoder );
+            return tEncoder.toJson();
+        }
 
-    public void encode(JsonEncoder pEncoder) {
+        
+        public void encode( JsonEncoder pEncoder) {
+
+        
+            JsonEncoder tEncoder = pEncoder;
+            //Encode Attribute: mName Type: String List: false
+            tEncoder.add( "name", mName );
+        
+            //Encode Attribute: mValue Type: String List: false
+            tEncoder.add( "value", mValue );
+        
+        }
+
+        
+        public void decode( JsonDecoder pDecoder) {
+
+        
+            JsonDecoder tDecoder = pDecoder;
+        
+            //Decode Attribute: mName Type:String List: false
+            mName = tDecoder.readString("name");
+        
+            //Decode Attribute: mValue Type:String List: false
+            mValue = tDecoder.readString("value");
+        
+
+        }
+    
+
+        @Override
+        public String toString() {
+             Gson gsonPrinter = new GsonBuilder().setPrettyPrinting().create();
+             return  gsonPrinter.toJson( this.toJson());
+        }
+    
+
+        public static  Builder getFieMessageBuilder() {
+            return new FieMessage.Builder();
+        }
 
 
-        JsonEncoder tEncoder = pEncoder;
-        //Encode Attribute: mName Type: String List: false
-        tEncoder.add("name", mName);
+        public static class  Builder {
+          private FieMessage mInstance;
 
-        //Encode Attribute: mValue Type: String List: false
-        tEncoder.add("value", mValue);
-
-    }
-
-    public void decode(JsonDecoder pDecoder) {
-
-
-        JsonDecoder tDecoder = pDecoder;
-
-        //Decode Attribute: mName Type:String List: false
-        mName = tDecoder.readString("name");
-
-        //Decode Attribute: mValue Type:String List: false
-        mValue = tDecoder.readString("value");
-
-
-    }
-
-    @Override
-    public String toString() {
-        Gson gsonPrinter = new GsonBuilder().setPrettyPrinting().create();
-        return gsonPrinter.toJson(this.toJson());
-    }
-
-    public static class Builder {
-        private final FieMessage mInstance;
-
-        private Builder() {
+          private Builder () {
             mInstance = new FieMessage();
-        }
+          }
 
-
-        public Builder setName(String pValue) {
-            mInstance.setName(pValue);
-            return this;
-        }
-
-        public Builder setValue(String pValue) {
-            mInstance.setValue(pValue);
-            return this;
-        }
-
+        
+                        public Builder setName( String pValue ) {
+                        mInstance.setName( pValue );
+                        return this;
+                    }
+                
+                        public Builder setValue( String pValue ) {
+                        mInstance.setValue( pValue );
+                        return this;
+                    }
+                
 
         public FieMessage build() {
             return mInstance;
         }
 
-    }
+        }
+    
+            }
+            
+        /**
+            Possible native attributes
+            o "boolean" mapped to JSON "Boolean"
+            o "byte" mapped to JSON "Integer"
+            o "char" mapped to JSON "Integer"
+            o "short" mapped to JSON "Integer"
+            o "int" mapped to JSON "Integer"
+            o "long" mapped to JSON "Integer"
+            o "double" mapped to JSON "Numeric"
+            o "String" mapped to JSON "String"
+            o "byte[]" mapped to JSON "String" (Base64 string)
 
-}
 
-/**
- * Possible native attributes
- * o "boolean" mapped to JSON "Boolean"
- * o "byte" mapped to JSON "Integer"
- * o "char" mapped to JSON "Integer"
- * o "short" mapped to JSON "Integer"
- * o "int" mapped to JSON "Integer"
- * o "long" mapped to JSON "Integer"
- * o "double" mapped to JSON "Numeric"
- * o "String" mapped to JSON "String"
- * o "byte[]" mapped to JSON "String" (Base64 string)
- * <p>
- * <p>
- * An attribute could also be an "constant" i.e. having the property "constantGroup", should then refer to an defined /Constang/Group
- * conastants are mapped to JSON strings,
- * <p>
- * <p>
- * If the type is not any of the types below it will be refer to an other structure / object
- **/
+            An attribute could also be an "constant" i.e. having the property "constantGroup", should then refer to an defined /Constang/Group
+             conastants are mapped to JSON strings,
+
+
+            If the type is not any of the types below it will be refer to an other structure / object
+
+        **/
 
     
