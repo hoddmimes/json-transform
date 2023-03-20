@@ -1,0 +1,114 @@
+<html>
+<head>
+    <meta name="description" contents="Online testing service XML to Java POJO / Json message objects. ">
+    <meta name="keywords" contents="Online XLTS XSL XMS POJO Json message objects">
+    <meta name="robots" contents="noarchive">
+
+    <script
+            src="https://code.jquery.com/jquery-3.3.1.js"
+            integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+            crossorigin="anonymous">
+    </script>
+    <script src="js/transform.js" type="text/javascript"></script>
+
+
+    <title>POJO Transformer</title>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
+    <link rel="stylesheet" type="text/css" href="css/jtransformer.css">
+</head>
+<body style="background-color:#d1d1e0" onload="loadExample()"/>
+
+
+         <p style="margin-left:620px; font-family:Arial, Helvetica, sans-serif; color:black;">
+             <a href="help.html"><b>POJO Transformer</b></a>
+         </p>
+
+         <div class="divcontainer" align="center" >
+             <div class="divcodehdr">
+                 <b>XML Defintion</b>
+             </div>
+             <div class="divcodehdr">
+                 <b>Generated Code</b>
+             </div>
+         </div>
+         <br>
+
+         <div class="divcontainer"  align="center" >
+             <div class="divcode" id="src_definition">
+                 <textarea id="xmlsrc" cols="70" rows="100"class="srctext">
+
+                 </textarea>
+             </div>
+             <div class="divcode" id="src_generated">
+                 <textarea readonly id="javasrc" cols="70" rows="100"class="srctext" >
+                 </textarea>
+             </div>
+         </div>
+
+        <div class="divbuttoncontainer" align="center" >
+         <p>
+             <button type="button" onclick="transform()">Transform</button>
+         </p>
+        </div>
+
+
+
+<Script>
+
+    function transform() {
+        let code = document.getElementById("xmlsrc").value;
+        if (!code.includes("<Message")) {
+            alert("Not a valid message definition");
+            return;
+        }
+        if (!code.includes("</Message>")) {
+            alert("Not a valid message definition");
+            return;
+        }
+
+        var rqst = {xml: code };
+
+
+        var posting = $.ajax( { url:'/transform/app/transform', type:'POST', data : JSON.stringify(rqst),  contentType : 'application/json; charset=iso-8859-1'});
+
+        posting.fail(function (jqXHR, status, err) {
+          transformError(jqXHR, status);
+        });
+
+        posting.done(function( msg ) {
+        javasrc = document.getElementById("javasrc");
+        if (msg.hasOwnProperty('success') && msg.hasOwnProperty('reason'))
+        {
+           javasrc.value = msg.reason;
+           alert('Transformation failed');
+        } else {
+           javasrc.value = msg.src;
+        }
+        });  // Done
+    }
+
+
+    function loadExample() {
+      /* Send the data using post with element id name and name2*/
+        var posting = $.ajax( { url:"/transform/app/example", type:'GET', contentType : 'application/json; charset=utf-8'});
+
+        posting.fail(function (jqXHR, status, err) {
+            transformError(jqXHR, status);
+        });
+
+        /* Alerts the results */
+        posting.done(function( msg ) {
+            xmlsrc = document.getElementById("xmlsrc");
+            xmlsrc.value = '';
+            for (let i = 0; i < msg.xml.length; i++)
+            {
+                xmlsrc.value = xmlsrc.value +  msg.xml[i] + '\r\n';
+            }
+        }); // Done
+        return;
+    }
+
+
+</Script>
+</body>
+</html>

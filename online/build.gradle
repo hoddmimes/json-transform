@@ -1,0 +1,88 @@
+buildscript {
+    repositories { flatDir name: 'libs', dirs: "../libs" }
+    dependencies { classpath 'com.hoddmimes.versionplugin:versionplugin:1.0' }
+}
+
+plugins {
+    id 'java'
+    id 'war'
+    id 'org.hidetake.ssh' version '2.11.2'
+}
+
+
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'com.hoddmimes.versionplugin'
+
+war {
+    archiveBaseName='transform'
+    webAppDirectory=file('WebContent')
+    archiveVersion = tasks.transformVersion.version()
+    destinationDirectory = file("$project.rootDir")
+    classpath fileTree('../libs') {
+        exclude 'pojojson-tests*.jar'
+        exclude 'versionplugin*.jar'
+    }
+
+    from '../WebContent' // adds a file-set to the root of the archive
+}
+
+remotes {
+    hoddmimes {
+        host = 'www.hoddmimes.com'
+        user = 'bertilsson'
+        port = 11721
+        identity = file( System.getProperty("user.home") + '/.ssh/id_rsa')
+    }
+}
+
+tasks.register('copyToHoddmimes') {
+    doLast {
+        def vrs = tasks.transformVersion.version()
+        def warJar = "transform-" + "$vrs" + ".war"
+        ssh.run {
+            session(remotes.hoddmimes) {
+                put from:   "$project.rootDir/$warJar" , into: './transform.war'
+                execute 'sudo mv ./transform.war /var/lib/tomcat/webapps'
+            }
+        }
+        println("**** $warJar copied to Hoddmimes")
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: '../libs', include: 'google-java-format-1.16.0-all-deps.jar')
+    implementation project(':transform')
+    implementation project(':samples')
+
+
+
+    //implementation group: 'jakarta.ws.rs', name: 'jakarta.ws.rs-api', version: '3.1.0'
+    implementation group: 'javax.ws.rs', name: 'javax.ws.rs-api', version: '2.1.1'
+
+    //providedCompile group: 'jakarta.servlet', name: 'jakarta.servlet-api', version: '6.0.0'
+    providedCompile group: 'javax.servlet', name: 'javax.servlet-api', version: '4.0.1'
+
+    implementation group: 'com.googlecode.jatl', name: 'jatl', version: '0.2.3'
+    implementation group: 'javax.mail', name: 'javax.mail-api', version: '1.6.2'
+    implementation group: 'com.sun.mail', name: 'javax.mail', version: '1.6.2'
+
+    implementation group: 'org.apache.commons', name: 'commons-lang3', version: '3.12.0'
+    implementation group: 'commons-codec', name: 'commons-codec', version: '1.15'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+
+    implementation group: 'org.glassfish.jersey.core', name: 'jersey-server', version: '2.39'
+    implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet', version: '2.39'
+    implementation group: 'org.glassfish.jersey.containers', name: 'jersey-container-servlet-core', version: '2.39'
+    implementation group: 'org.glassfish.jersey.inject', name: 'jersey-hk2', version: '2.39'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}

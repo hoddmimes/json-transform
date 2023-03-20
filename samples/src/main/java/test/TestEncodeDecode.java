@@ -1,8 +1,8 @@
 package test;
 
 import com.google.gson.*;
-import com.hoddmimes.jsontransform.JsonDecoder;
-import com.hoddmimes.jsontransform.JsonEncoder;
+import com.hoddmimes.transform.JsonDecoder;
+import com.hoddmimes.transform.JsonEncoder;
 import generated.*;
 import java.util.List;
 

@@ -17,7 +17,7 @@ build/
 samples/build/
 samples/out
 json-transform.iml
-jtransform/build/
+transform/build/
 samples/jsonSchema/Car.json
 samples/jsonSchema/Vehicle.json
 gradlew

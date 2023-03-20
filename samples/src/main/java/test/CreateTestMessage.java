@@ -5,9 +5,7 @@ import generated.*;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class CreateTestMessage
 {
@@ -86,15 +84,26 @@ public class CreateTestMessage
         testMsg.setConstValue(CG1.X1);
         testMsg.setIntArray(createIntegerArray(cRand.nextInt(5) + 1, 101));
         testMsg.setIntValue(102);
+        testMsg.setCharValue((char) 'Z');
         testMsg.setDateValue(LocalDate.now());
+        testMsg.setMapValue(createMap(4));
         testMsg.setLongValue(1010101010101L);
         testMsg.setMsgArray(createMsgArray(5));
         testMsg.setMsgValue(createSubMessage());
         testMsg.setShortValue((short) 33);
+        testMsg.setDoubleValue(28.96D);
         testMsg.setStringArray( createStringArray(cRand.nextInt(5) + 1, "str-åäö-array"));
         testMsg.setStrValue("string-value-åäö");
         testMsg.setTimeString( SDF.format(System.currentTimeMillis()));
         return testMsg;
+    }
+
+    public static Map<String,String> createMap(int pCount ) {
+        Map<String,String> tMap = new HashMap<>();
+        for (int i = 0; i < pCount; i++) {
+            tMap.put("key-" + String.valueOf(i), "value-" + String.valueOf(i));
+        }
+        return tMap;
     }
 
     public static TestMessage createValidTestMessage() {

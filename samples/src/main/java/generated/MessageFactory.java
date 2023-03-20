@@ -19,7 +19,7 @@
 
 package generated;
 
-import com.hoddmimes.jsontransform.*;
+import com.hoddmimes.transform.*;
 import java.nio.ByteBuffer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -1,5 +1,6 @@
 rootProject.name = 'json-transform'
-include 'jtransform'
+include 'transform'
 include 'samples'
-include 'samples'
+include 'online'
+include 'tomcat'
 

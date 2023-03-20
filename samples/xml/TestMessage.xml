@@ -49,6 +49,7 @@
 		<Attribute name="dateValue" type="LocalDate"/>
 		<Attribute name="byteValue" type="byte"/>
 		<Attribute name="doubleValue" type="double"/>
+		<Attribute name="mapValue" type="Map"/>
 		<Attribute name="shortValue" type="short" mandatory="true" min="0" max="100" multiplieOf="3" />
 		<Attribute name="intValue" type="int" mandatory="true" dbKey="not-unique"/>
 		<Attribute name="intArray" type="int" list="stack" />

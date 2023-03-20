@@ -2,7 +2,7 @@ package test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hoddmimes.jsontransform.JsonSchemaValidator;
+import com.hoddmimes.transform.JsonSchemaValidator;
 import generated.DateTimeMessage;
 import generated.TestMessage;
 

@@ -1,1 +1,1 @@
-java -cp pojojson-tests-1.3.jar test.TestSchema
+java -cp ./libs/pojojson-tests-1.4.jar test.TestSchema

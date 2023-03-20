@@ -1,26 +1,27 @@
-
+import groovy.json.JsonSlurper
 
 plugins {
     id 'java'
 }
 
-allprojects {
-    group = "com.hoddmimes"
-    version = 1.3
+repositories {
+    mavenCentral()
+}
+
+subprojects {
+    group 'com.hoddmimes.transform'
 
     java {
         toolchain {
             languageVersion = JavaLanguageVersion.of(15)
         }
     }
-}
 
+    task transformVersion() {
+        def jsonSlurper = new JsonSlurper()
 
-repositories {
-    mavenCentral()
-}
-
-
-
-dependencies {
+        def build = jsonSlurper.parse(new File("$project.rootDir/version.json"))
+        //print( "$build" )
+        ext.version = { "$build.major" + "." + "$build.minor" }
+    }
 }

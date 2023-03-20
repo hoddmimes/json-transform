@@ -15,6 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+            
 package generated;
 
 import java.util.ArrayList;
@@ -38,15 +39,15 @@ import java.io.IOException;
     import org.bson.conversions.Bson;
     import com.mongodb.BasicDBObject;
     import org.bson.types.ObjectId;
-    import com.hoddmimes.jsontransform.MessageMongoInterface;
-    import com.hoddmimes.jsontransform.MongoDecoder;
-    import com.hoddmimes.jsontransform.MongoEncoder;
+    import com.hoddmimes.transform.MessageMongoInterface;
+    import com.hoddmimes.transform.MongoDecoder;
+    import com.hoddmimes.transform.MongoEncoder;
 
 
-import com.hoddmimes.jsontransform.MessageInterface;
-import com.hoddmimes.jsontransform.JsonDecoder;
-import com.hoddmimes.jsontransform.JsonEncoder;
-import com.hoddmimes.jsontransform.ListFactory;
+import com.hoddmimes.transform.MessageInterface;
+import com.hoddmimes.transform.JsonDecoder;
+import com.hoddmimes.transform.JsonEncoder;
+import com.hoddmimes.transform.ListFactory;
 import com.google.gson.JsonObject;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -70,6 +71,7 @@ import com.google.gson.GsonBuilder;
                     private LocalDate mDateValue;
                     private Byte mByteValue;
                     private Double mDoubleValue;
+                    private Map<String,String> mMapValue;
                     private Short mShortValue;
                     private Integer mIntValue;
                     private List<Integer> mIntArray;
@@ -174,6 +176,14 @@ import com.google.gson.GsonBuilder;
             }
             public Optional<Double> getDoubleValue() {
               return  Optional.ofNullable(mDoubleValue);
+            }
+        
+            public TestMessage setMapValue( Map<String,String> pMapValue ) {
+            mMapValue = pMapValue;
+            return this;
+            }
+            public Optional<Map<String,String>> getMapValue() {
+              return  Optional.ofNullable(mMapValue);
             }
         
             public TestMessage setShortValue( Short pShortValue ) {
@@ -359,6 +369,9 @@ import com.google.gson.GsonBuilder;
             //Encode Attribute: mDoubleValue Type: double List: false
             tEncoder.add( "doubleValue", mDoubleValue );
         
+            //Encode Attribute: mMapValue Type: Map List: false
+            tEncoder.add( "mapValue", mMapValue );
+        
             //Encode Attribute: mShortValue Type: short List: false
             tEncoder.add( "shortValue", mShortValue );
         
@@ -421,6 +434,9 @@ import com.google.gson.GsonBuilder;
             //Decode Attribute: mDoubleValue Type:double List: false
             mDoubleValue = tDecoder.readDouble("doubleValue");
         
+            //Decode Attribute: mMapValue Type:Map List: false
+            mMapValue = tDecoder.readMap("mapValue");
+        
             //Decode Attribute: mShortValue Type:short List: false
             mShortValue = tDecoder.readShort("shortValue");
         
@@ -478,6 +494,7 @@ import com.google.gson.GsonBuilder;
                 pEncoder.add("dateValue",  mDateValue );
                 pEncoder.add("byteValue",  mByteValue );
                 pEncoder.add("doubleValue",  mDoubleValue );
+                pEncoder.add("mapValue",  mMapValue );
                 pEncoder.add("shortValue",  mShortValue );
                 pEncoder.add("intValue",  mIntValue );
                 pEncoder.addIntegerArray( "intArray", mIntArray );
@@ -512,6 +529,8 @@ import com.google.gson.GsonBuilder;
            mByteValue = tDecoder.readByte("byteValue");
         
            mDoubleValue = tDecoder.readDouble("doubleValue");
+        
+           mMapValue = tDecoder.readMap("mapValue");
         
            mShortValue = tDecoder.readShort("shortValue");
         
@@ -598,6 +617,11 @@ import com.google.gson.GsonBuilder;
                 
                         public Builder setDoubleValue( Double pValue ) {
                         mInstance.setDoubleValue( pValue );
+                        return this;
+                    }
+                
+                        public Builder setMapValue( Map<String,String> pValue ) {
+                        mInstance.setMapValue( pValue );
                         return this;
                     }
                 

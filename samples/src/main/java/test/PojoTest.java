@@ -1,7 +1,7 @@
 package test;
 
 
-import com.hoddmimes.jsontransform.JsonDecoder;
+import com.hoddmimes.transform.JsonDecoder;
 import generated.BarMessage;
 import generated.FooMessage;
 

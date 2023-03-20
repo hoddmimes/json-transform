@@ -1,0 +1,24 @@
+
+<Messages>
+    <Message name="Cycle">
+        <Attribute name="model" type="String"/>
+        <Attribute name="manufacture" type="String"/>
+        <Attribute name="weight" type="int"/>
+    </Message>
+
+    <Message name="Result">
+        <Attribute name="race" type="String"/>
+        <Attribute name="uciRanking" type="double"/>
+        <Attribute name="place" type="int"/>
+        <Attribute name="date" type="LocalDate"/>
+    </Message>
+
+    <Message name="Cyclist">
+        <Attribute name="name" type="String"/>
+        <Attribute name="age" type="int"/>
+        <Attribute name="team" type="String"/>
+        <Attribute name="professional" type="boolean"/>
+        <Attribute name="cycle" type="Cycle"/>
+        <Attribute name="results" type="Result" list="array"/>
+    </Message>
+</Messages>

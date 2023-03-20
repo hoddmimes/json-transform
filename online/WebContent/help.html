@@ -1,0 +1,197 @@
+<html>
+<header>
+    <link rel="stylesheet" type="text/css" href="css/help.css">
+    <title>POJO Transformer</title>
+</header>
+<body style="background-color:#d1d1e0">
+<div>
+    </br></br></br>
+    <h2>Overview</h2>
+    <p>This page provides a service allowing online testing of <i>json-transforming</i>. The Json-transforming service basically
+        takes XML definitions of message objects and generates POJOs. Normally definitions are kept in XML files.
+        However, this service allows you to do the definitions interactively and
+        allows you to do definitions and transformations interactively.</p>
+    <p>
+        In the <a href="#anchor-syntax">syntax</a> section below you can read about the syntax used when defining
+        message objects in XML.
+    </p>
+
+    <h2>POJO Json Transform Project</h2>
+    <p>
+        The <i>POJO Json Project</i> is a utility for generate POJOs from sparse definitions. Generated message objects will
+        have the ability to serialize themselves to Json and/or Mongo BSON objects, in most efficient way.</br>
+        In addition, basic Json Schema definitions could also be generated for messages objects.
+    </p>
+    <p>
+        The project is an open source project and it could be found in <a href="https://github.com/hoddmimes/json-transform">GITHUB</a>
+    </p>
+    <h2 id="anchor-syntax">Syntax</h2>
+        <h3>&lt;Message&gt;</h3>
+        <p>
+            The <i><b>Message</b></i> tag encapsulate the definition for a message object that is provided as a Java class. The message element could have the following attributes</i>
+            <ul>
+            <li><b>name</b> mandatory, defines the name of the message objects that also is the name of the Java class.</li>
+            <li><b>rootMessage</b> default <i>false</i>, defines whatever the message object is a top level object. Message object could also be part of other message objects.
+                In these cases it's then more convinent to have the messages as none <i>rootMessage</i>.</li>
+            <li><b>db</b> <i>(true|false)</i> optional, define if the message object should support Mongo DB coding.
+            <li><b>dbCollection</b>  optional, define the name of the Mongo DB collection for the object in case the message support Mongo DB coding.
+            <li><b>extends</b>  optional, defines that the message objects extends another <i>(none rootMessage)</i> object.
+            </ul>
+            <p style="padding: 20px 0; margin-left:60px;background-color:e7e7e7;">
+            <code>
+                &lt;Message name="TestMessage" rootMessage="true" db="true" dbCollection="Test"&gt;
+            </code>
+            </p>
+        </p>
+
+        <h3>&lt;Attribute&gt;</h3>
+        <p><i><b>Attribute</b></i> is used as part of a <i>message</i> definition and defines an attribute for the message. The following attributes can be used in
+            conjuction with a XML <i>Attribute</i> tag;
+
+    <ul>
+    <li><b>name</b> mandatory, defines the name of the attribute.</li>
+    <li><b>type</b> mandatory, defines the attribute type, could be of a <i>native type</i>, or be a reference to a defined <i>message object</i>.</li>
+    <li><b>list</b> optional, defines the attribute is a collection. Supported types are <i>array,linked and stack</i> correspond
+           to the underlying Java implementations LinkedList, ArrayList and Stack</li>
+    </ul>
+    <p style="padding: 20px 0; margin-left:60px;background-color:e7e7e7;">
+        <code>
+            &lt;Attribute name="intArray" type="int" list="array"/&gt;
+        </code>
+    </p>
+
+    <h3>Native Attribute Types</h3>
+    <p>
+    The following <i>types</i> can be used when defining a message object attribute.
+    </p></br>
+    <table>
+        <tr>
+            <th>Attribute Type</th>
+            <th>Java Type</th>
+            <th>Json Type</th>
+            <th>Mongo Type</th>
+        </tr>
+        <tr>
+            <td>boolean</td>
+            <td>&lt;Optional&gt; Boolean</td>
+            <td>boolean</td>
+            <td>Boolean</td>
+        </tr>
+        <tr>
+            <td>byte</td>
+            <td>&lt;Optional&gt; Byte</td>
+            <td>Number</td>
+            <td>Int32</td>
+        </tr>
+        <tr>
+            <td>short</td>
+            <td>&lt;Optional&gt; Short</td>
+            <td>Number</td>
+            <td>Int32</td>
+        </tr>
+        <tr>
+            <td>int</td>
+            <td>&lt;Optional&gt; Integer</td>
+            <td>Number</td>
+            <td>Int32</td>
+        </tr>
+        <tr>
+            <td>long</td>
+            <td>&lt;Optional&gt; Long</td>
+            <td>Number</td>
+            <td>Int64</td>
+        </tr>
+        <tr>
+            <td>double</td>
+            <td>&lt;Optional&gt; Double</td>
+            <td>Number</td>
+            <td>Double</td>
+        </tr>
+        <tr>
+            <td>char</td>
+            <td>&lt;Optional&gt; Character</td>
+            <td>Number</td>
+            <td>Int32</td>
+        </tr>
+        <tr>
+            <td>String</td>
+            <td>&lt;Optional&gt; String</td>
+            <td>String</td>
+            <td>String</td>
+        </tr>
+        <tr>
+            <td>byte[]</td>
+            <td>&lt;Optional&gt; byte[]</td>
+            <td>String (hex)</td>
+            <td>String (hex)</td>
+        </tr>
+        <tr>
+            <td>Map</td>
+            <td>&lt;Optional&gt; Map&lt;String,String&gt;</td>
+            <td>Object {String,String} * n </td>
+            <td>Object {String,String} * n</td>
+        </tr>
+        <tr>
+            <td>LocalDateTime</td>
+            <td>&lt;Optional&gt;LocalDateType</td>
+            <td>String "yyyy-MM-dd HH:mm:ss.SSS"</td>
+            <td>String "yyyy-MM-dd HH:mm:ss.SSS"</td>
+        </tr>
+        <tr>
+            <td>LocalDate</td>
+            <td>&lt;Optional&gt;LocalDate</td>
+            <td>String "yyyy-MM-dd"</td>
+            <td>String "yyyy-MM-dd"</td>
+        </tr>
+    </table>
+
+    <h3>Message Object Types</h3>
+    <p>
+        Message objects could besides having navtive attributes also have <i>message Object</i> as attribute.
+        Worth mention is the difference between a <i>rootMessage</i> object and a <i>none rootMessage</i>. The difference is
+        how the message object is Json encoded. </br>
+    </p>
+    <p style="padding: 20px 0; margin-left:60px;background-color:e7e7e7;">
+        <code>
+            &lt;Message name="FooMessage" rootMessage="true"&gt;<br>
+              &nbsp;&nbsp;&nbsp;&lt;Attribute name="barValue" type="int"/&gt;<br>
+            &lt;/Message&gt;<br>
+        </code>
+    </p>
+
+    <ul>
+        <li>A <i>rootMessage</i> has an extra level with the name as object i.e.  "{ "FooMessage" : { "barValue" : ...}}"
+        <li>A none <i>rootMessage</i> do not have the extra object level i.e. "{ "barValue" : ...}" </li>
+    </ul>
+
+    <p>
+    <i>It is possible to let a message object attribute to be a rootMessage but that will implicate the extra (Json) object level. </i>
+    </p>
+
+    <h3>Constant Group Types</h3>
+    <p>
+        It is said that a message object attribute always have a "type" definition, true with one excemption :-)
+        If the attribute is a <i>constant group</i> the attribute does not have a type for the <i>&lt;Attribute&gt;</i> has either
+        <b>"type"</b> or <b>"constantGroup"</b>. A constant group definitions translates to a Java Enumeration. An example of a  constant group follows below;
+    </p>
+
+    <p style="padding: 20px 0; margin-left:60px;background-color:e7e7e7;">
+        <code></br>
+            &lt;ConstantGroups prefix="Core"&gt;</br>
+            &nbsp;&nbsp;&lt;Group name="CG1"&gt;</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Constant id="X1"/&gt;</br>
+            &nbsp;&nbsp;&nbsp;&nbsp;&lt;Constant id="X2"/&gt;</br>
+            &nbsp;&nbsp;&lt;/Group&gt;</br>
+            &lt;/ConstantGroups&gt;</br>
+            </br>
+            &lt;Message name="FooMessage" rootMessage="true"&gt;<br>
+            &nbsp;&nbsp;&nbsp;&lt;Attribute name="barValue" constantGroup="CG1"/&gt;<br>
+            &lt;/Message&gt;<br>
+        </code>
+    </p>
+
+</div>
+
+
+</body>
+</html>

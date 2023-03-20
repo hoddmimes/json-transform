@@ -8,7 +8,7 @@ The generated Java POJO objects have the ability to encode itself to JSON object
 From the XML definitions the POJOs and corresponding JSON (basic) schemas could be generated. Furthermore there is support for the generated POJO messages to encode / decode them self to Mongo documents.
 For more information about the Mongo support see section *Mongo Support* below.
 
-It migth and most likely is easier(?) to use Jackson for mapping between POJOs and JSON.
+It might and most likely is easier(?) to use Jackson for mapping between POJOs and JSON.
 The advantages with json-transform are:
 * In case a lot of messages are to be defined. This can be accomplished efficiently with a minimum of writing.
 * The utility encoding/decoding is about 8-10 times faster than Jackson.
@@ -29,7 +29,14 @@ many files and packages.
 To test you can run a transformation of the sample definitions by execution the command
 $ java -cp json-transform.1._x_.jar JsonTransform -xml ./xml/TestMessagesFileSet.xml
 
-The file generate.sh do this for you i.e. generate the test files.
+The file runGenerate.sh do this for you i.e. generate the test files.
+
+_**There is also an online page where you can test transformation interactively. On the page there is 
+also some addition help of how to define message objects .**_
+
+_**[Online Json Transformation Testing](https://hoddmimes.com/transformation/index.html)**_
+
+
 
 ## Sample TestMessageFileSet.xml
 
@@ -197,6 +204,6 @@ The test assumes that there is a local Mongo DB instance without any authenticat
 ## JAR Files Built
 Three JAR files are built and placed on the project top level
 
-- pojojson-generate-1.3.jar  this JAR contains everyhing needed for generating POJO/JSON objects from a XML definition, A generation of objects are typically done by invoking the following command "java -cp pojojson-generate-1.3.jar JsonTransform -xml *transformation-definions*.xml"
-- pojojson-1.3.jar contains the support classes for encode/decode generated POJO/JSON objects. This JAR is need when there is a need for encode/decode generated objects.
+- pojojson-generate-1.4.jar  this JAR contains everyhing needed for generating POJO/JSON objects from a XML definition, A generation of objects are typically done by invoking the following command "java -cp pojojson-generate-1.4.jar JsonTransform -xml *transformation-definions*.xml"
+- pojojson-1.4.jar contains the support classes for encode/decode generated POJO/JSON objects. This JAR is need when there is a need for encode/decode generated objects.
 - pojojson-tests.jar contains all classes for running the test on the generated TestMessage object in this project.
