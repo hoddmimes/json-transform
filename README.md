@@ -34,7 +34,7 @@ The file runGenerate.sh do this for you i.e. generate the test files.
 _**There is also an online page where you can test transformation interactively. On the page there is 
 also some addition help of how to define message objects .**_
 
-_**[Online Json Transformation Testing](https://hoddmimes.com/transformation/index.html)**_
+_**[Online Json Transformation Testing](https://hoddmimes.com/transform/index.html)**_
 
 
 
