@@ -27,7 +27,8 @@ war {
         exclude 'versionplugin*.jar'
     }
 
-    from '../WebContent' // adds a file-set to the root of the archive
+    exclude('**/transform/*')
+    from('../WebContent')
 }
 
 remotes {
@@ -55,8 +56,8 @@ tasks.register('copyToHoddmimes') {
 
 dependencies {
     implementation fileTree(dir: '../libs', include: 'google-java-format-1.16.0-all-deps.jar')
-    implementation project(':transform')
-    implementation project(':samples')
+    implementation project(':transformGenerate')
+    implementation project(':transformAux')
 
 
 

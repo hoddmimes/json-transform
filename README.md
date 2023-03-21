@@ -17,7 +17,24 @@ The advantages with json-transform are:
 
 ## Transformation / Generation
 There is a Java program **JsonTransform.java** that takes one argument "-xml *transformation-definitions*.xml".  The program will read the definitions file and based on the definitions generate JAVA POJO classes, JSON Schemas and a MessageFactory.
-The later can take a JSON string and create a corresponding POJO .
+The later can take a JSON string and create a corresponding POJO.
+
+if running transformation from command line it is accomplished by executing the following command line 
+~~~
+   java -jar pojojson-generate-1.4.jar -xml <transform-filset-definitions.xml>
+~~~
+
+maybe more relevant is howto invoke the transformation from a Gradle build. A transformation can be run as a JavaExec task, e.g.
+~~~
+
+   task generateMessageObject( type: JavaExec) {
+       mainClass = 'JsonTransform'
+       classpath = ./libs/pojojson-generate-1.4.jar
+       args "-xml","./xml/TestMessagesFileSet.xml"
+   }
+   
+~~~
+
 
 ## XML Defintions
 Samples are found in the directory ./samples/xml/

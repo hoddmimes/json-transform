@@ -18,14 +18,13 @@ def trnsVrs = tasks.transformVersion.version()
 
 tasks.register('generateTestClasses', JavaExec) {
     mainClass = 'JsonTransform'
-    classpath = project.project(':transform').sourceSets.main.runtimeClasspath
-    args "-xml","./xml/TestMessagesFileSet.xml","-xslDir","../transform/src/main/resources/"
+    classpath = project.project(':transformGenerate').sourceSets.main.runtimeClasspath
+    args "-xml","./xml/TestMessagesFileSet.xml","-xslDir","../transformGenerate/src/main/resources/"
 }
 
 
 
 task buildTestJar (type: Jar) {
-    dependsOn(':transform:buildGenerateJar')
     archiveBaseName = 'pojojson-tests'
     destinationDirectory = file("../libs/")
     archiveVersion = "$trnsVrs"
@@ -36,6 +35,10 @@ task buildTestJar (type: Jar) {
 
     from {
         zipTree("../libs/pojojson-generate-" + "$trnsVrs" + ".jar")
+    } with jar
+
+    from {
+        zipTree("../libs/pojojson-" + "$trnsVrs" + ".jar")
     } with jar
 
     exclude "META-INF/*.SF"
@@ -59,31 +62,9 @@ task buildTestJar (type: Jar) {
 }
 
 
-task buildPojoJar (type: Jar) {
-    archiveBaseName = 'pojojson'
-    destinationDirectory = file("../libs/")
-    archiveVersion = "$trnsVrs"
-
-    from('build/classes/java/main/') {
-        include '**/transform/*.class'
-    }
-    doLast {
-        def pojoJar ="pojojson-" + "$trnsVrs" + ".jar"
-        print("***** Built JAR $pojoJar\n")
-    }
-}
-
-task buildJars() {
-    dependsOn( buildPojoJar )
-    dependsOn( buildTestJar )
-}
-
 
 
 task deleteGenerated( type: Delete ) {
-    def generateJar = "../libs/pojojson-" + "$trnsVrs" + ".jar"
-    delete "$generateJar"
-
     def testJar ="../libs/pojojson-tests-" + "$trnsVrs" + ".jar"
     delete "$testJar"
 
@@ -92,7 +73,7 @@ task deleteGenerated( type: Delete ) {
     }
 
     doLast {
-        print("***** Delete $testJar jar $generateJar and generated test message objects")
+        print("***** Delete $testJar and generated test message objects")
     }
 
 }
@@ -100,12 +81,13 @@ task deleteGenerated( type: Delete ) {
 
 compileJava.dependsOn('generateTestClasses')
 
-build.finalizedBy(buildJars)
+build.finalizedBy(buildTestJar)
 clean.dependsOn(deleteGenerated)
 
 
 dependencies {
-    implementation project(':transform')
+    implementation project(':transformAux')
+    implementation project(':transformGenerate')
     implementation group: 'org.slf4j', name: 'slf4j-simple', version: '2.0.6'
     implementation group: 'com.github.erosb', name: 'everit-json-schema', version: '1.14.1'
     implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'

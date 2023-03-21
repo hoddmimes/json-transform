@@ -1,6 +1,6 @@
 ## Sample
 
-Implements and provides test programs.
-Also contains the auxillary classes needed for message coding.
+Implements and provides test programsfor the Json transformer utility
+The project artefact is the pojojson-tests-x.y.jar containing everything needed for running test, 
+see run*.[sh|cmd] in the rootDir.
 
-The project also produce the a JAR pojojson-x.y.jar containing the auxillary classes for message object coding.

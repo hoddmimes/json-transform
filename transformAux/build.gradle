@@ -1,0 +1,65 @@
+buildscript {
+    repositories { flatDir name: 'libs', dirs: "../libs" }
+    dependencies { classpath 'com.hoddmimes.versionplugin:versionplugin:1.0' }
+}
+
+plugins {
+    id 'java'
+}
+
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'com.hoddmimes.versionplugin'
+
+def trnsVrs = tasks.transformVersion.version()
+
+
+task buildPojoAuxJar (type: Jar) {
+    archiveBaseName = 'pojojson'
+    destinationDirectory = file("../libs/")
+    archiveVersion = "$trnsVrs"
+
+    from('build/classes/java/main/') {
+        include '**/*.class'
+    }
+    doLast {
+        def pojoJar ="pojojson-" + "$trnsVrs" + ".jar"
+        print("***** Built JAR $pojoJar\n")
+    }
+}
+
+
+task deletePojoAuxJar( type: Delete ) {
+    def generateJar = "../libs/pojojson-" + "$trnsVrs" + ".jar"
+    delete "$generateJar"
+
+
+    doLast {
+        print("***** Delete $generateJar")
+    }
+
+}
+
+
+build.finalizedBy(buildPojoAuxJar)
+clean.dependsOn(deletePojoAuxJar)
+
+
+dependencies {
+
+    implementation group: 'com.github.erosb', name: 'everit-json-schema', version: '1.14.1'
+    implementation group: 'com.google.code.gson', name: 'gson', version: '2.10.1'
+    implementation group: 'javax.annotation', name: 'javax.annotation-api', version: '1.3.2'
+    implementation group: 'com.jsoniter', name: 'jsoniter', version: '0.9.23'
+    implementation group: 'org.mongodb', name: 'mongo-java-driver', version: '3.8.2'
+
+    testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.1'
+    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.1'
+}
+
+test {
+    useJUnitPlatform()
+}

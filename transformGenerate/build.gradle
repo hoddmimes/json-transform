@@ -64,7 +64,7 @@ task buildGenerateJar (type: Jar) {
     duplicatesStrategy = 'exclude'
 
     manifest {
-        attributes 'Implementation-Title': 'JsonTransform', 'Implementation-Version': archiveVersion
+        attributes 'Implementation-Title': 'JsonTransform', 'Implementation-Version': archiveVersion,  'Main-Class': 'JsonTransform'
     }
 
 
