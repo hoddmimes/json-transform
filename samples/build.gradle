@@ -65,7 +65,7 @@ task buildPojoJar (type: Jar) {
     archiveVersion = "$trnsVrs"
 
     from('build/classes/java/main/') {
-        include '**/jsontransform/*.class'
+        include '**/transform/*.class'
     }
     doLast {
         def pojoJar ="pojojson-" + "$trnsVrs" + ".jar"
