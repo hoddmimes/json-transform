@@ -54,6 +54,8 @@ tasks.register('copyToHoddmimes') {
     }
 }
 
+war.dependsOn(  ':transformAux:buildPojoAuxJar', ':transformGenerate:buildGenerateJar')
+
 dependencies {
     implementation fileTree(dir: '../libs', include: 'google-java-format-1.16.0-all-deps.jar')
     implementation project(':transformGenerate')

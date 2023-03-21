@@ -79,10 +79,11 @@ task deleteGenerated( type: Delete ) {
 
 }
 
+buildTestJar.dependsOn( 'generateTestClasses', ':transformAux:buildPojoAuxJar', ':transformGenerate:buildGenerateJar')
 
 compileJava.dependsOn('generateTestClasses')
 
-build.finalizedBy(buildTestJar)
+classes.finalizedBy(buildTestJar)
 clean.dependsOn(deleteGenerated)
 
 
