@@ -43,8 +43,8 @@ task deletePojoAuxJar( type: Delete ) {
 
 }
 
-
-build.finalizedBy(buildPojoAuxJar)
+classes.finalizedBy( buildPojoAuxJar )
+buildPojoAuxJar.dependsOn(deletePojoAuxJar)
 clean.dependsOn(deletePojoAuxJar)
 
 

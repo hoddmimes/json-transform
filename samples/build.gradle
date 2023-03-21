@@ -25,6 +25,7 @@ tasks.register('generateTestClasses', JavaExec) {
 
 
 task buildTestJar (type: Jar) {
+    dependsOn()
     archiveBaseName = 'pojojson-tests'
     destinationDirectory = file("../libs/")
     archiveVersion = "$trnsVrs"
